@@ -283,7 +283,7 @@ $(document).on( 'click', ".addnewfld", function(){
 					    '</div>    '+
 						'<div id="collapseFld'+numofaccords+'" class="accordion-body in collapse" style="height: auto;"> ' +
 							'<div class="accordion-inner">  ' +
-			         			'<input type="hidden" name="data[Fld]['+numofflds+'][id]" id="FldId'+numofflds+'"><input type="hidden"  name="data[Fld]['+numofflds+'][pobject_id]" id="FldPobjectId'+numofflds+'">'+
+			         			'<input type="hidden" name="data[Fld]['+numofflds+'][id]" id="FldId'+numofflds+'"><input type="hidden"  name="data[Fld]['+numofflds+'][pobject_id]" value= "'++'" id="FldPobjectId'+numofflds+'">'+
 					
 							'<div class="input text"><label for="FldName">Name</label><input name="data[Fld]['+numofflds+'][name]" type="text" class="fldname" object="'+numofaccords+'" id="FldName"></div>'+
 							'<div class="input select"><label for="FldFtypeId">Ftype</label><select name="data[Fld]['+numofflds+'][ftype_id]" id="FldFtypeId"> </select></div>' +

@@ -1,4 +1,5 @@
 <div class="pobjects index">
+	
 	<h2><?php __('Pobjects');?></h2>
      <?php echo $this->Form->create(null, array('action'=>'deleteall')); ?>
 	<table class="table" cellpadding="0" cellspacing="0">
@@ -20,10 +21,10 @@
 	?>
 	<tr<?php echo $class;?>>
 <td><?php echo $this->Form->input($pobject['Pobject']['id'], array('type'=>'checkbox','label'=>false)); ?></td>
-		<td><?php echo $this->Html->link($pobject['Pobject']['id'], '#', array('id'=>'id','data-url'=>'editindexsavefld', 'data-type'=>'text', 'data-pk'=> $pobject['Pobject']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
-		<td><?php echo $this->Html->link($pobject['Project']['id'], '#', array('id'=>'project_id','data-url'=>'editindexsavefld', 'data-type'=>'select2', 'data-pk'=> $pobject['Pobject']['id'], 'class'=>'editable editable-click dclass-Project', 'style'=>'display: inline;')); ?></td>
-		<td><?php echo $this->Html->link($pobject['Pobject']['tablename'], '#', array('id'=>'tablename','data-url'=>'editindexsavefld', 'data-type'=>'text', 'data-pk'=> $pobject['Pobject']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
-		<td><?php echo $this->Html->link($pobject['Pobject']['description'], '#', array('id'=>'description','data-url'=>'editindexsavefld', 'data-type'=>'text', 'data-pk'=> $pobject['Pobject']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
+		<td><?php echo $this->Html->link($pobject['Pobject']['id'], '#', array('id'=>'id','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $pobject['Pobject']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
+		<td><?php echo $this->Html->link($pobject['Project']['id'], '#', array('id'=>'project_id','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'select2', 'data-pk'=> $pobject['Pobject']['id'], 'class'=>'editable editable-click dclass-Project', 'style'=>'display: inline;')); ?></td>
+		<td><?php echo $this->Html->link($pobject['Pobject']['tablename'], '#', array('id'=>'tablename','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $pobject['Pobject']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
+		<td><?php echo $this->Html->link($pobject['Pobject']['description'], '#', array('id'=>'description','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $pobject['Pobject']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
 
 				 <td> <?php $arr = array(); 
 				 foreach($pobjectdata[$i-1]['Pobjectbehavior'] as $Pobjectbehavior){ $arr[] = $Pobjectbehavior['name']; }
