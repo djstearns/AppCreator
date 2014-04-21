@@ -46,7 +46,8 @@ class FldsController extends AppController {
 			$this->Fld->create();
 			if ($this->Fld->saveAll($this->data['Fld'])) {
 				
-				$return = $this->Fld->find('all', array('conditions'=>array('pobject_id'=>$this->data['Pobject']['id'])));
+				$return = $this->Fld->find('all', array('conditions'=>array('pobject_id'=>$this->data['Fld'][3]['pobject_id'])));
+				$return['message'] = 'Suceess!';
 			}else{
 				$this->data['message'] = 'Nope';
 				$return = $this->data;
@@ -165,24 +166,21 @@ class FldsController extends AppController {
 	}
     
         function index() {
-		//$this->Fld->recursive = 0;
+		$this->Fld->recursive = 2;
 		$this->set('flds', $this->paginate());
          //check if this is a relationship table
-        			   		 $flddata = $this->Fld->find('all');
-		        
-       
-       
-		        
-        		$pobjects = $this->Fld->Pobject->find('list');
+		$flddata = $this->Fld->find('all');
+		
+		$pobjects = $this->Fld->Pobject->find('list');
 		$ftypes = $this->Fld->Ftype->find('list');
 		$fldbehaviors = $this->Fld->Fldbehavior->find('list');
-
-						$arr = array();
-						foreach($fldbehaviors as $item => $i){
-							$arr[] = $i;
-						}
-						$fldbehaviorstr = json_encode($arr);
-							$this->set(compact('flddata', 'pobjects', 'ftypes', 'fldbehaviorstr'));
+	
+		$arr = array();
+		foreach($fldbehaviors as $item => $i){
+			$arr[] = $i;
+		}
+		$fldbehaviorstr = json_encode($arr);
+		$this->set(compact('flddata', 'pobjects', 'ftypes', 'fldbehaviorstr'));
         
         
 	}

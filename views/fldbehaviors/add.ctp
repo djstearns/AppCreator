@@ -3,7 +3,8 @@
 	<fieldset>
 		<legend><?php __('Add Fldbehavior'); ?></legend>
 	<?php
-		echo $this->Form->input('Fld', array('data-placeholder'=>'Choose a Fld...','class'=>'chosen-select'));
+		echo $this->Form->input('Fldbehabor.name');
+		//echo $this->Form->input('Fld', array('data-placeholder'=>'Choose a Fld...','class'=>'chosen-select'));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit', true));?>

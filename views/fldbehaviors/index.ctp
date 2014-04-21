@@ -1,10 +1,12 @@
 <div class="fldbehaviors index">
+	<?php print_r($fldbehaviors);?>
 	<h2><?php __('Fldbehaviors');?></h2>
      <?php echo $this->Form->create(null, array('action'=>'deleteall')); ?>
 	<table class="table" cellpadding="0" cellspacing="0">
 	<tr>
     <th></th>
 			<th><?php echo $this->Paginator->sort('id');?></th>
+            <th><?php echo $this->Paginator->sort('name'); ?></th>
 	    	<th><?php echo 'Related Fld'.'s';?></th>		<th class="actions"><?php __('Actions');?></th>
 	</tr>
 	<?php
@@ -18,11 +20,9 @@
 	<tr<?php echo $class;?>>
 <td><?php echo $this->Form->input($fldbehavior['Fldbehavior']['id'], array('type'=>'checkbox','label'=>false)); ?></td>
 		<td><?php echo $this->Html->link($fldbehavior['Fldbehavior']['id'], '#', array('id'=>'id','data-url'=>'editindexsavefld', 'data-type'=>'text', 'data-pk'=> $fldbehavior['Fldbehavior']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
+        <td><?php echo $this->Html->link($fldbehavior['Fldbehavior']['name'], '#', array('id'=>'id','data-url'=>'editindexsavefld', 'data-type'=>'text', 'data-pk'=> $fldbehavior['Fldbehavior']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
 
-				 <td> <?php $arr = array(); 
-				 foreach($fldbehaviordata[$i-1]['Fld'] as $Fld){ $arr[] = $Fld['name']; }
-					$str = implode(',',$arr); 
-					echo $this->Html->link($str, '#', array( 'id'=>'Fld__name','data-url'=>'savehabtmfld', 'data-type'=>'select2', 'data-pk'=> $fldbehavior['Fldbehavior']['id'], 'class'=>'editable editable-click mclass-Fld', 'style'=>'display: inline;')); ?></td>
+				
 						<td class="actions">
 			<?php echo $this->Html->link(__('View', true), array('action' => 'view', $fldbehavior['Fldbehavior']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit', true), array('action' => 'edit', $fldbehavior['Fldbehavior']['id'])); ?>

@@ -10,7 +10,8 @@
 			'theme',
 			'bootstrap-responsive',
 			'chosen',
-			'select2'
+			'select2',
+			'jquery-ui-1.10.4.custom.min'
 		));    
 
         echo $this->Layout->js();
@@ -19,7 +20,12 @@
 			'bootstrap',
 			'bootstrap-editable',
 			'select2',
-			'chosen.jquery'
+			'chosen.jquery',
+			'jsplumb',
+			//'http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js',
+			'jquery-ui-1.10.4.custom.min'
+			
+			
 			
 		));
 		echo $scripts_for_layout;
@@ -94,5 +100,6 @@
   </body>
 </html>
 <script type="text/javascript">
-$(".chosen-select").chosen()
+$(".chosen-select").chosen();
+
 </script>

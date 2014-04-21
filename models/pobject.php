@@ -2,7 +2,7 @@
 class Pobject extends AppModel {
 	var $name = 'Pobject';
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
-
+	var $displayField = 'tablename';
 	var $belongsTo = array(
 		'Project' => array(
 			'className' => 'Project',
