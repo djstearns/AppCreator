@@ -10,6 +10,10 @@
 			'/croogo/css/croogo-bootstrap',
 			'/croogo/css/croogo-bootstrap-responsive',
 			'/croogo/css/thickbox',
+			'/croogo/css/chosen',
+			'/croogo/css/select2',
+			'/croogo/css/jquery-ui-1.10.4.custom.min',
+			'/croogo/css/bootstrap-editable'
 		));
 		echo $this->Layout->js();
 		echo $this->Html->script(array(
@@ -28,6 +32,12 @@
 			'/croogo/js/admin',
 			'/croogo/js/choose',
 			'/croogo/js/croogo-bootstrap.js',
+			'/croogo/js/bootstrap-editable.js',
+			'/croogo/js/select2.js',
+			'/croogo/js/chosen.jquery.js',
+			'/croogo/js/jsplumb.js',
+			//'http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js',
+			'/croogo/js/jquery-ui-1.10.4.custom.min.js'
 		));
 
 		echo $this->fetch('script');

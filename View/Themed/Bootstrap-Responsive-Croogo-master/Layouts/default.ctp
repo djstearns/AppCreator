@@ -22,12 +22,22 @@
         echo $this->Html->css(array(
             'bootstrap',
             'bootstrap-responsive',
-            'style'
+            'style',
+			'chosen',
+			'select2',
+			'jquery-ui-1.10.4.custom.min',
+			'bootstrap-editable'
         ));
         echo $this->Layout->js();
         echo $this->Html->script(array(
             'jquery.min',
-            'bootstrap'
+            'bootstrap',
+			'bootstrap-editable',
+			'select2',
+			'chosen.jquery',
+			'jsplumb',
+			//'http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js',
+			'jquery-ui-1.10.4.custom.min'
             
         ));
         echo $scripts_for_layout;
