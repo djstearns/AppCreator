@@ -118,7 +118,21 @@ class FtypesController extends AppController {
 		echo json_encode($response);
 	}
     
-        function index() {
+    function index() {
+		//$this->Ftype->recursive = 0;
+		$this->set('ftypes', $this->paginate());
+         //check if this is a relationship table
+        			   		 $ftypedata = $this->Ftype->find('all');
+		        
+       
+       
+		        
+        		$this->set(compact('ftypedata'));
+        
+        
+	}
+	
+	function admin_index() {
 		//$this->Ftype->recursive = 0;
 		$this->set('ftypes', $this->paginate());
          //check if this is a relationship table
@@ -207,6 +221,8 @@ class FtypesController extends AppController {
 			$this->data = $this->Ftype->read(null, $id);
 		}
 	}
+	
+	
 
 	function delete($id = null) {
 		if (!$id) {
