@@ -8,6 +8,12 @@ App::uses('ProjectAppController', 'Project.Controller');
  */
 class FldsController extends ProjectAppController {
 
+	public function beforeFilter() {
+		parent::beforeFilter();
+		$this->Security->unlockedActions = array('editindexsavefld','admin_editindexsavefld','admin_add');
+		
+	}
+
 /**
  * Components
  *
@@ -55,6 +61,7 @@ class FldsController extends ProjectAppController {
 				$this->Session->setFlash(__d('croogo', 'The fld could not be saved. Please, try again.'), 'default', array('class' => 'error'));
 			}
 		}
+		
 		$pobjects = $this->Fld->Pobject->find('list');
 		$ftypes = $this->Fld->Ftype->find('list');
 		$fldbehaviors = $this->Fld->Fldbehavior->find('list');
@@ -119,6 +126,19 @@ class FldsController extends ProjectAppController {
 	public function admin_index() {
 		//$this->Fld->recursive = 0;
 		$this->set('flds', $this->paginate());
+		$flddata = $this->Fld->find('all');
+		
+		$pobjects = $this->Fld->Pobject->find('list');
+		$ftypes = $this->Fld->Ftype->find('list');
+		$fldbehaviors = $this->Fld->Fldbehavior->find('list');
+	
+		$arr = array();
+		foreach($fldbehaviors as $item => $i){
+			$arr[] = $i;
+		}
+		$fldbehaviorstr = json_encode($arr);
+		$this->set(compact('flddata', 'pobjects', 'ftypes', 'fldbehaviorstr'));
+        
 	}
 
 /**
@@ -144,6 +164,8 @@ class FldsController extends ProjectAppController {
 	public function admin_add() {
 		if ($this->request->is('post')) {
 			$this->Fld->create();
+			//debugger::dump($this->request->data);
+			//exit();
 			if ($this->Fld->save($this->request->data)) {
 				$this->Session->setFlash(__d('croogo', 'The fld has been saved'), 'default', array('class' => 'success'));
 				$this->redirect(array('action' => 'index'));
@@ -151,10 +173,11 @@ class FldsController extends ProjectAppController {
 				$this->Session->setFlash(__d('croogo', 'The fld could not be saved. Please, try again.'), 'default', array('class' => 'error'));
 			}
 		}
+		$fldbehaviorstr = '';
 		$pobjects = $this->Fld->Pobject->find('list');
 		$ftypes = $this->Fld->Ftype->find('list');
 		$fldbehaviors = $this->Fld->Fldbehavior->find('list');
-		$this->set(compact('pobjects', 'ftypes', 'fldbehaviors'));
+		$this->set(compact('pobjects', 'ftypes', 'fldbehaviors','fldbehaviorstr'));
 	}
 
 /**

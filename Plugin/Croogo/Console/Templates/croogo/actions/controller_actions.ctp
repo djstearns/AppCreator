@@ -19,14 +19,126 @@
 ?>
 
 /**
- * <?php echo $admin ?>index method
+ * <?php echo $admin ?>indexold method
  *
  * @return void
  */
-	public function <?php echo $admin ?>index() {
+	public function <?php echo $admin ?>indexOLD() {
 		$this-><?php echo $currentModelName ?>->recursive = 0;
 		$this->set('<?php echo $pluralName ?>', $this->paginate());
 	}
+    
+    
+ /**
+ * <?php echo $admin ?>index method
+ *
+ * @return void
+ */ 
+  <?php $compact = array(); ?>
+        function <?php echo $admin ?>index() {
+            //$this-><?php echo $currentModelName ?>->recursive = 0;
+            $this->set('<?php echo $pluralName ?>', $this->paginate());
+             //check if this is a relationship table
+            <?php if(preg_match('/\s/',$singularHumanName) == 1):?>
+                        $<?php echo str_replace( ' ' , '' , $singularHumanName); ?>data = $this-><?php echo $currentModelName ?>->find('all');
+                  <?php  else: ?>
+                         $<?php echo strtolower($singularHumanName); ?>data = $this-><?php echo $currentModelName ?>->find('all');
+            <?php endif;?>
+            
+           
+           
+            <?php if(preg_match('/\s/',$singularHumanName) == 1){
+                        $compact[] = "'".str_replace( ' ' , '' , $singularHumanName).'data'."'";
+                   }else{
+                        $compact[] =  "'".strtolower($singularHumanName).'data'."'";
+                   }
+                        
+            ?>
+            
+            <?php
+        foreach (array('belongsTo', 'hasAndBelongsToMany') as $assoc):
+            foreach ($modelObj->{$assoc} as $associationName => $relation):
+                if (!empty($associationName)):
+                    $otherModelName = $this->_modelName($associationName);
+                    $otherPluralName = $this->_pluralName($associationName);
+                    echo "\t\t\${$otherPluralName} = \$this->{$currentModelName}->{$otherModelName}->find('list');\n";
+                    
+                    if($assoc =='hasAndBelongsToMany'):
+                        echo "
+                            \$arr = array();
+                            foreach(\${$otherPluralName} as \$item => \$i){
+                                \$arr[] = \$i;
+                            }
+                            \${$otherPluralName}tr = json_encode(\$arr);
+                        ";
+                        $compact[] = "'{$otherPluralName}tr'";
+                    else:
+                        $compact[] = "'{$otherPluralName}'";
+                    endif;
+                    
+                    
+                endif;
+            endforeach;
+        endforeach;
+        if (!empty($compact)):
+            echo "\t\t\$this->set(compact(".join(', ', $compact)."));\n";
+        endif;
+    ?>
+            
+        
+	}
+  
+  
+  
+  
+  
+  
+  
+    
+     function savehabtmfld(){
+  
+		$this->autoRender = false;
+		$this-><?php echo $currentModelName ?>->id = $_POST['pk'];
+        $tr = substr($_POST['name'],0,strpos($_POST['name'],'__'));
+		$ids = $this-><?php echo $currentModelName ?>->$tr->find('list', array('fields'=>array('id'), 'conditions'=>array(str_replace('__','.',$_POST['name'])=>$_POST['value'])));
+		$this->data = array('<?php echo $currentModelName ?>'=>array('id'=>$_POST['pk']),substr($_POST['name'],0,strpos($_POST['name'],'__'))=>array(substr($_POST['name'],0,strpos($_POST['name'],'__'))=>$ids));
+		
+		if($this-><?php echo $currentModelName ?>->save($this->data)) {
+			$response = true;
+				
+		} else {
+			$response = false;
+		}
+		echo json_encode($response);
+	}
+    
+    
+     function <?php echo $admin ?>deleteall() {
+		$this->autoRender = false;
+        
+  		$this->autoRender = false;
+		$arr = array();
+		foreach($this->data['<?php echo $currentModelName ?>'] as $<?php echo $singularName; ?>_id => $del){
+			if($del == 1 ){$arr[] = $<?php echo $singularName; ?>_id;}
+		}
+		if($this-><?php echo $currentModelName ?>->deleteAll(array('<?php echo $currentModelName; ?>.id'=>$arr))) {
+			$this->Session->setFlash(__('Deleted.', true));
+			$this->redirect(array('action' => 'editindex'));
+		
+		}else{
+			$this->Session->setFlash(__('Could not be deleted.', true));
+			$this->redirect(array('action' => 'editindex'));
+		}
+
+	}
+    
+  
+  
+  
+  
+  
+  
+    
 
 /**
  * <?php echo $admin ?>view method
@@ -42,6 +154,8 @@
 		$options = array('conditions' => array('<?php echo $currentModelName; ?>.' . $this-><?php echo $currentModelName; ?>->primaryKey => $id));
 		$this->set('<?php echo $singularName; ?>', $this-><?php echo $currentModelName; ?>->find('first', $options));
 	}
+
+
 
 <?php $compact = array(); ?>
 /**
@@ -81,6 +195,9 @@
 	endif;
 ?>
 	}
+
+
+
 
 <?php $compact = array(); ?>
 /**
