@@ -33,8 +33,8 @@ $this->Html
 							<td>
 			<?php echo $this->Html->link($fld['Fld']['id'], '#', array('class'=>'editable editable-click jclass', 'style'=>'display: inline;', 'data-type'=>'text', 'id'=>'id', 'data-url'=>'projects/editindexsavefld', 'data-pk'=> $fld['Fld']['id'])); ?>
 		</td>
-		<td>
-			<?php echo $this->Html->link($fld['Pobject']['id'], array('controller' => 'pobjects', 'action' => 'view', $fld['Pobject']['id'])); ?>
+		
+			<td><?php echo $this->Html->link($fld['Pobject']['tablename'], '#', array('id'=>'pobject_id','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'select2', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click dclass-Pobject', 'style'=>'display: inline;')); ?>
 		</td>
 
 					
@@ -71,7 +71,7 @@ $('.jclass').editable();
 $('.mclass-Fldbehavior').editable({
 						inputclass: 'input-large',
 							select2: {
-								tags: ['html', 'javascript', 'css', 'ajax']<?php echo $fldbehaviorstr; ?>,
+								tags: <?php echo $fldbehaviorstr; ?>,
 								tokenSeparators: [',', ' ']
 							}
 							});

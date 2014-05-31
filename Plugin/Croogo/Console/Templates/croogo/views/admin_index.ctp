@@ -42,39 +42,42 @@ echo $header;
 				foreach ($associations['belongsTo'] as $alias => $details) {
 					if ($field === $details['foreignKey']) {
 						$isKey = true;
+						/*echo "\t\t<td>\n\t\t\t<?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$details['displayField']}'], array('controller' => '{$details['controller']}', 'action' => 'view', \${$singularVar}['{$alias}']['{$details['primaryKey']}'])); ?>\n\t\t</td>\n";
+						*/
+						echo "\t\t<td><?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$displayField}'], '#', array('id'=>'{$field}','data-url'=>'editindexsavefld', 'data-type'=>'select2', 'data-pk'=> \${$singularVar}['{$modelClass}']['{$primaryKey}'], 'class'=>'editable editable-click dclass-".$alias."', 'style'=>'display: inline;')); ?></td>\n";
 						
-						echo "\t\t<td>\n\t\t\t<?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$details['displayField']}'], array('controller' => '{$details['controller']}', 'action' => 'view', \${$singularVar}['{$alias}']['{$details['primaryKey']}'])); ?>\n\t\t</td>\n";
-						/*echo "\t\t<td>\n\t\t\t<?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$details['displayField']}'], '#', array('class'=>'editable editable-click jclass', 'style'=>'display: inline;', 'data-type'=>'text', 'id'=>'{$details['displayField']}', 'data-url'=>'projects/editindexsavefld', 'data-pk'=> \${$singularVar}['{$alias}']['id'])); ?>\n\t\t</td>\n";*/
-						
-						//echo $this->Html->link($project['Project']['name'], '#', array('id'=>'name','data-url'=>'projects/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $project['Project']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); 
-						
-						
-						//break;
+						/*
+						echo "\t\t<td><?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$displayField}'], '#', array('data-source'=>json_encode(\$".strtolower($alias)."s) ,'id'=>'{$field}','data-url'=>'editindexsavefld', 'data-type'=>'select2', 'data-pk'=> \${$singularVar}['{$modelClass}']['{$primaryKey}'], 'class'=>'editable editable-click', 'style'=>'display: inline;')); ?></td>\n";
+						*/
+						break;
 					}
 				}
 			}
 
-			if (!empty($associations['hasAndBelongsToMany'])) {
-				foreach ($associations['hasAndBelongsToMany'] as $alias => $details) {
-					
-					/*echo "\t\t<td><?php foreach(\$kiddata[\$i-1]['$alias'] as \$alias){ echo \$this->Html->link(\$alias['{$details['displayField']}'], array('controller' => '{$alias}s', 'action' => 'view', \$alias['{$details['primaryKey']}'])); } ?></td>\n";
-					*/
-					echo "
-					 <td> <?php \$arr = array(); 
-					 foreach(\${$singularVar}data[\$i-1]['$alias'] as \${$alias}){ \$arr[] = \${$alias}['{$details['displayField']}']; }
-						\$str = implode(',',\$arr); 
-						echo \$this->Html->link(\$str, '#', array( 'id'=>'{$alias}__{$details['displayField']}','data-url'=>'savehabtmfld', 'data-type'=>'select2', 'data-pk'=> \${$singularVar}['{$modelClass}']['{$primaryKey}'], 'class'=>'editable editable-click mclass-{$alias}', 'style'=>'display: inline;')); ?></td>
-					";
-					
-				}
+			if ($isKey !== true) {
+				/*
+					echo "\t\t<td><?php echo \${$singularVar}['{$modelClass}']['{$field}']; ?>&nbsp;</td>\n";
+				*/
+				echo "\t\t<td><?php echo \$this->Html->link(\${$singularVar}['{$modelClass}']['{$field}'], '#', array('id'=>'{$field}','data-url'=>'editindexsavefld', 'data-type'=>'text', 'data-pk'=> \${$singularVar}['{$modelClass}']['{$primaryKey}'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>\n";
+			}
+			
+			
+		}
+		
+		if (!empty($associations['hasAndBelongsToMany'])) {
+			foreach ($associations['hasAndBelongsToMany'] as $alias => $details) {
+				
+				/*echo "\t\t<td><?php foreach(\$kiddata[\$i-1]['$alias'] as \$alias){ echo \$this->Html->link(\$alias['{$details['displayField']}'], array('controller' => '{$alias}s', 'action' => 'view', \$alias['{$details['primaryKey']}'])); } ?></td>\n";
+				*/
+				echo "
+				 <td> <?php \$arr = array(); 
+				 foreach(\${$singularVar}data[\$i-1]['$alias'] as \${$alias}){ \$arr[] = \${$alias}['{$details['displayField']}']; }
+					\$str = implode(',',\$arr); 
+					echo \$this->Html->link(\$str, '#', array( 'id'=>'{$alias}__{$details['displayField']}','data-url'=>'savehabtmfld', 'data-type'=>'select2', 'data-pk'=> \${$singularVar}['{$modelClass}']['{$primaryKey}'], 'class'=>'editable editable-click mclass-{$alias}', 'style'=>'display: inline;')); ?></td>
+				";
 				
 			}
 			
-			if ($isKey !== true) {
-				/*echo "\t\t<td><?php echo h(\${$singularVar}['{$modelClass}']['{$field}']); ?>&nbsp;</td>\n";*/
-				echo "\t\t<td>\n\t\t\t<?php echo \$this->Html->link(\${$singularVar}['{$modelClass}']['{$field}'], '#', array('class'=>'editable editable-click jclass', 'style'=>'display: inline;', 'data-type'=>'text', 'id'=>'{$field}', 'data-url'=>'projects/editindexsavefld', 'data-pk'=> \${$singularVar}['{$alias}']['id'])); ?>\n\t\t</td>\n";
-						
-			}
 		}
 		
 		
