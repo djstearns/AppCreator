@@ -1,29 +1,61 @@
-<div class="flds form">
-<?php echo $this->Form->create('Fld');?>
-	<fieldset>
-		<legend><?php __('Edit Fld'); ?></legend>
-	<?php
-		echo $this->Form->input('id');
-		echo $this->Form->input('pobject_id');
-		echo $this->Form->input('name');
-		echo $this->Form->input('ftype_id');
-		echo $this->Form->input('length');
-		echo $this->Form->input('Fldbehavior', array('data-placeholder'=>'Choose a Fldbehavior...','class'=>'chosen-select'));
-	?>
-	</fieldset>
-<?php echo $this->Form->end(__('Submit', true));?>
-</div>
-<div class="actions">
-	<h3><?php __('Actions'); ?></h3>
-	<ul>
+<?php
+$this->viewVars['title_for_layout'] = __d('croogo', 'Flds');
+$this->extend('/Common/admin_edit');
 
-		<li><?php echo $this->Html->link(__('Delete', true), array('action' => 'delete', $this->Form->value('Fld.id')), null, sprintf(__('Are you sure you want to delete # %s?', true), $this->Form->value('Fld.id'))); ?></li>
-		<li><?php echo $this->Html->link(__('List Flds', true), array('action' => 'index'));?></li>
-		<li><?php echo $this->Html->link(__('List Pobjects', true), array('controller' => 'pobjects', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Pobject', true), array('controller' => 'pobjects', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Ftypes', true), array('controller' => 'ftypes', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Ftype', true), array('controller' => 'ftypes', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Fldbehaviors', true), array('controller' => 'fldbehaviors', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Fldbehavior', true), array('controller' => 'fldbehaviors', 'action' => 'add')); ?> </li>
-	</ul>
+$this->Html
+	->addCrumb('', '/admin', array('icon' => 'home'))
+	->addCrumb(__d('croogo', 'Flds'), array('action' => 'index'));
+
+if ($this->action == 'admin_edit') {
+	$this->Html->addCrumb($this->data['Fld']['name'], '/' . $this->request->url);
+	$this->viewVars['title_for_layout'] = 'Flds: ' . $this->data['Fld']['name'];
+} else {
+	$this->Html->addCrumb(__d('croogo', 'Add'), '/' . $this->request->url);
+}
+
+echo $this->Form->create('Fld');
+
+?>
+<div class="flds row-fluid">
+	<div class="span8">
+		<ul class="nav nav-tabs">
+		<?php
+			echo $this->Croogo->adminTab(__d('croogo', 'Fld'), '#fld');
+			echo $this->Croogo->adminTabs();
+		?>
+		</ul>
+
+		<div class="tab-content">
+			<div id='fld' class="tab-pane">
+			<?php
+				echo $this->Form->input('id');
+				$this->Form->inputDefaults(array('label' => false, 'class' => 'span10'));
+				echo $this->Form->input('pobject_id', array(
+					'label' => 'Pobject Id',
+				));
+				echo $this->Form->input('name', array(
+					'label' => 'Name',
+				));
+				echo $this->Form->input('ftype_id', array(
+					'label' => 'Ftype Id',
+				));
+				echo $this->Form->input('Fldbehavior');
+			?>
+			</div>
+			<?php echo $this->Croogo->adminTabs(); ?>
+		</div>
+
+	</div>
+
+	<div class="span4">
+	<?php
+		echo $this->Html->beginBox(__d('croogo', 'Publishing')) .
+			$this->Form->button(__d('croogo', 'Apply'), array('name' => 'apply')) .
+			$this->Form->button(__d('croogo', 'Save'), array('class' => 'btn btn-primary')) .
+			$this->Html->link(__d('croogo', 'Cancel'), array('action' => 'index'), array('class' => 'btn btn-danger')) .
+			$this->Html->endBox();
+		?>
+	</div>
+
 </div>
+<?php echo $this->Form->end(); ?>

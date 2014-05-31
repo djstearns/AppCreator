@@ -34,6 +34,15 @@ CroogoNav::add('projects', array(
 	'title' => 'Projects',
 	'url' => '#',
 	'children' => array(
+	    'List Flds' => array(
+			'title' => 'List Flds',
+			'url' => array(
+				'admin' => true,
+				'plugin' => 'project',
+				'controller' => 'flds',
+				'action' => 'index',
+			),
+		),
 		'List' => array(
 			'title' => 'List',
 			'url' => array(

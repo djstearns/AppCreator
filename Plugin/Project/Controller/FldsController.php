@@ -1,244 +1,58 @@
 <?php
-class FldsController extends AppController {
+App::uses('ProjectAppController', 'Project.Controller');
+/**
+ * Flds Controller
+ *
+ * @property Fld $Fld
+ * @property PaginatorComponent $Paginator
+ */
+class FldsController extends ProjectAppController {
 
-	var $name = 'Flds';
-	 public function beforeFilter() {
-       parent::beforeFilter();
+/**
+ * Components
+ *
+ * @var array
+ */
+	public $components = array('Paginator');
 
-    }
-
-	function indexOLD() {
+/**
+ * index method
+ *
+ * @return void
+ */
+	public function index() {
 		$this->Fld->recursive = 0;
 		$this->set('flds', $this->paginate());
 	}
-	
-	function multiadd(){
-		//need to test!
-		$this->autoRender = false;
-		/*
-		foreach($this->data as $fld){
-			if($fld['id'] != ''){
-				//update!
-				$this->Fld->id = $fld['id'];
-				if ($this->Fld->save($fld)) {
-					$this->data['Pobject']['message'] = 'what a joke2!';
-					$return = $this->data;
-				} else {
-					$this->Session->setFlash(__('The Pobject could not be saved. Please, try again.', true));
-					$return = $this->data['Pobject']['message'] = 'NOT what a joke2!';//array('Pobject'=>array('message'=>'could not save'));
-				}
-			}else{
-				//add
-				$this->Pobject->create();
-				unset($this->data['id']	);
-				if ($this->Pobject->save($this->data)) {
-					$this->data['Pobject']['id'] = $this->Pobject->getLastInsertId();
-						
-					$return = $this->data;
-				} else {
-					$this->Session->setFlash(__('The Pobject could not be saved. Please, try again.', true));
-					
-					$return = $this->data;
-				}
-			}
+
+/**
+ * view method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function view($id = null) {
+		if (!$this->Fld->exists($id)) {
+			throw new NotFoundException(__d('croogo', 'Invalid fld'));
 		}
-			*/
+		$options = array('conditions' => array('Fld.' . $this->Fld->primaryKey => $id));
+		$this->set('fld', $this->Fld->find('first', $options));
+	}
+
+/**
+ * add method
+ *
+ * @return void
+ */
+	public function add() {
+		if ($this->request->is('post')) {
 			$this->Fld->create();
-			if ($this->Fld->saveAll($this->data['Fld'])) {
-				
-				$return = $this->Fld->find('all', array('conditions'=>array('pobject_id'=>$this->data['Fld'][3]['pobject_id'])));
-				$return['message'] = 'Suceess!';
-			}else{
-				$this->data['message'] = 'Nope';
-				$return = $this->data;
-			}
-		
-		return json_encode($return);	
-		
-		
-	
-	}
-    
-    function mobileindex() {
-		$this->Fld->recursive = -1;
-		$this->autoRender = false;
-		$check = $this->Fld->find('all', array('limit'=>200));
-		$save = array();
-		if($check) {
-			
-			$response = $check;
-				
-		} else {
-			$response = array(
-				'logged' => false,
-				'message' => 'Invalid user'
-			);
-		}
-		echo json_encode($response);
-	}
-    
-    function mobileadd() {
-		$this->autoRender = false;
-		$this->data['Fld']=$_POST;
-		$this->Fld->create();
-		if ($this->Fld->save($this->data)) {
-			$check = array(
-			'logged' => false,
-			'message' => 'Saved!',
-			'id'=>$this->Fld->getLastInsertId()
-			);	
-		} else {
-			$this->Session->setFlash(__('The Fld could not be saved. Please, try again.', true));
-		}
-		if($check) {
-			
-			$response = $check;
-				
-		} else {
-			$response = array(
-				'logged' => false,
-				'message' => 'Invalid user'
-			);
-		}
-		echo json_encode($response);
-	}
-    
-     function mobilesave() {
-		$this->autoRender = false;
-        $this->Fld->id=$_POST['id'];
-		$this->data['Fld']=$_POST;
-		if ($this->Fld->save($this->data)) {
-			$check = array(
-			'logged' => false,
-			'message' => 'Saved!',
-			);	
-		} else {
-			$this->Session->setFlash(__('The Fld could not be saved. Please, try again.', true));
-		}
-		if($check) {
-			
-			$response = $check;
-				
-		} else {
-			$response = array(
-				'logged' => false,
-				'message' => 'Invalid Fld'
-			);
-		}
-		echo json_encode($response);
-	}
-    
-    function mobiledelete($id = null) {
-		if (!$id) {
-			$response = array(
-						'logged' => false,
-						'message' => 'Fld did not exist remotely!'
-					);
-			
-		}
-		if ($this->Fld->delete($id)) {
-			$response = array(
-						'logged' => false,
-						'message' => 'Fld deleted!'
-					);
-					
-		}else{
-			$response = array(
-						'logged' => false,
-						'id'=>$id,
-						'message' => 'Fld not deleted!'
-					);
-		}
-					
-		echo json_encode($response);
-	}
-    
-    function editindexsavefld() {
-		$this->autoRender = false;
-		$this->Fld->id = $_POST['pk'];
-		
-		if($this->Fld->saveField($_POST['name'],$_POST['value'])) {
-			$response = true;	
-		} else {
-			$response = false;
-		}
-		echo json_encode($response);
-	}
-    
-        function index() {
-		$this->Fld->recursive = 2;
-		$this->set('flds', $this->paginate());
-         //check if this is a relationship table
-		$flddata = $this->Fld->find('all');
-		
-		$pobjects = $this->Fld->Pobject->find('list');
-		$ftypes = $this->Fld->Ftype->find('list');
-		$fldbehaviors = $this->Fld->Fldbehavior->find('list');
-	
-		$arr = array();
-		foreach($fldbehaviors as $item => $i){
-			$arr[] = $i;
-		}
-		$fldbehaviorstr = json_encode($arr);
-		$this->set(compact('flddata', 'pobjects', 'ftypes', 'fldbehaviorstr'));
-        
-        
-	}
-    
-     function savehabtmfld(){
-  
-		$this->autoRender = false;
-		$this->Fld->id = $_POST['pk'];
-        $tr = substr($_POST['name'],0,strpos($_POST['name'],'__'));
-		$ids = $this->Fld->$tr->find('list', array('fields'=>array('id'), 'conditions'=>array(str_replace('__','.',$_POST['name'])=>$_POST['value'])));
-		$this->data = array('Fld'=>array('id'=>$_POST['pk']),substr($_POST['name'],0,strpos($_POST['name'],'__'))=>array(substr($_POST['name'],0,strpos($_POST['name'],'__'))=>$ids));
-		
-		if($this->Fld->save($this->data)) {
-			$response = true;
-				
-		} else {
-			$response = false;
-		}
-		echo json_encode($response);
-	}
-    
-    
-     function deleteall() {
-		$this->autoRender = false;
-        
-  		$this->autoRender = false;
-		$arr = array();
-		foreach($this->data['Fld'] as $fld_id => $del){
-			if($del == 1 ){$arr[] = $fld_id;}
-		}
-		if($this->Fld->deleteAll(array('Fld.id'=>$arr))) {
-			$this->Session->setFlash(__('Deleted.', true));
-			$this->redirect(array('action' => 'editindex'));
-		
-		}else{
-			$this->Session->setFlash(__('Could not be deleted.', true));
-			$this->redirect(array('action' => 'editindex'));
-		}
-
-	}
-    
-
-	function view($id = null) {
-		if (!$id) {
-			$this->Session->setFlash(__('Invalid fld', true));
-			$this->redirect(array('action' => 'index'));
-		}
-		$this->set('fld', $this->Fld->read(null, $id));
-	}
-
-	function add() {
-		if (!empty($this->data)) {
-			$this->Fld->create();
-			if ($this->Fld->save($this->data)) {
-				$this->Session->setFlash(__('The fld has been saved', true));
+			if ($this->Fld->save($this->request->data)) {
+				$this->Session->setFlash(__d('croogo', 'The fld has been saved'), 'default', array('class' => 'success'));
 				$this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The fld could not be saved. Please, try again.', true));
+				$this->Session->setFlash(__d('croogo', 'The fld could not be saved. Please, try again.'), 'default', array('class' => 'error'));
 			}
 		}
 		$pobjects = $this->Fld->Pobject->find('list');
@@ -247,21 +61,27 @@ class FldsController extends AppController {
 		$this->set(compact('pobjects', 'ftypes', 'fldbehaviors'));
 	}
 
-	function edit($id = null) {
-		if (!$id && empty($this->data)) {
-			$this->Session->setFlash(__('Invalid fld', true));
-			$this->redirect(array('action' => 'index'));
+/**
+ * edit method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function edit($id = null) {
+		if (!$this->Fld->exists($id)) {
+			throw new NotFoundException(__d('croogo', 'Invalid fld'));
 		}
-		if (!empty($this->data)) {
-			if ($this->Fld->save($this->data)) {
-				$this->Session->setFlash(__('The fld has been saved', true));
+		if ($this->request->is('post') || $this->request->is('put')) {
+			if ($this->Fld->save($this->request->data)) {
+				$this->Session->setFlash(__d('croogo', 'The fld has been saved'), 'default', array('class' => 'success'));
 				$this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The fld could not be saved. Please, try again.', true));
+				$this->Session->setFlash(__d('croogo', 'The fld could not be saved. Please, try again.'), 'default', array('class' => 'error'));
 			}
-		}
-		if (empty($this->data)) {
-			$this->data = $this->Fld->read(null, $id);
+		} else {
+			$options = array('conditions' => array('Fld.' . $this->Fld->primaryKey => $id));
+			$this->request->data = $this->Fld->find('first', $options);
 		}
 		$pobjects = $this->Fld->Pobject->find('list');
 		$ftypes = $this->Fld->Ftype->find('list');
@@ -269,16 +89,120 @@ class FldsController extends AppController {
 		$this->set(compact('pobjects', 'ftypes', 'fldbehaviors'));
 	}
 
-	function delete($id = null) {
-		if (!$id) {
-			$this->Session->setFlash(__('Invalid id for fld', true));
-			$this->redirect(array('action'=>'index'));
+/**
+ * delete method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $id
+ * @return void
+ */
+	public function delete($id = null) {
+		$this->Fld->id = $id;
+		if (!$this->Fld->exists()) {
+			throw new NotFoundException(__d('croogo', 'Invalid fld'));
 		}
-		if ($this->Fld->delete($id)) {
-			$this->Session->setFlash(__('Fld deleted', true));
-			$this->redirect(array('action'=>'index'));
+		$this->request->onlyAllow('post', 'delete');
+		if ($this->Fld->delete()) {
+			$this->Session->setFlash(__d('croogo', 'Fld deleted'), 'default', array('class' => 'success'));
+			$this->redirect(array('action' => 'index'));
 		}
-		$this->Session->setFlash(__('Fld was not deleted', true));
+		$this->Session->setFlash(__d('croogo', 'Fld was not deleted'), 'default', array('class' => 'error'));
 		$this->redirect(array('action' => 'index'));
 	}
-}
+
+/**
+ * admin_index method
+ *
+ * @return void
+ */
+	public function admin_index() {
+		//$this->Fld->recursive = 0;
+		$this->set('flds', $this->paginate());
+	}
+
+/**
+ * admin_view method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function admin_view($id = null) {
+		if (!$this->Fld->exists($id)) {
+			throw new NotFoundException(__d('croogo', 'Invalid fld'));
+		}
+		$options = array('conditions' => array('Fld.' . $this->Fld->primaryKey => $id));
+		$this->set('fld', $this->Fld->find('first', $options));
+	}
+
+/**
+ * admin_add method
+ *
+ * @return void
+ */
+	public function admin_add() {
+		if ($this->request->is('post')) {
+			$this->Fld->create();
+			if ($this->Fld->save($this->request->data)) {
+				$this->Session->setFlash(__d('croogo', 'The fld has been saved'), 'default', array('class' => 'success'));
+				$this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__d('croogo', 'The fld could not be saved. Please, try again.'), 'default', array('class' => 'error'));
+			}
+		}
+		$pobjects = $this->Fld->Pobject->find('list');
+		$ftypes = $this->Fld->Ftype->find('list');
+		$fldbehaviors = $this->Fld->Fldbehavior->find('list');
+		$this->set(compact('pobjects', 'ftypes', 'fldbehaviors'));
+	}
+
+/**
+ * admin_edit method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function admin_edit($id = null) {
+		if (!$this->Fld->exists($id)) {
+			throw new NotFoundException(__d('croogo', 'Invalid fld'));
+		}
+		if ($this->request->is('post') || $this->request->is('put')) {
+			if ($this->Fld->save($this->request->data)) {
+				$this->Session->setFlash(__d('croogo', 'The fld has been saved'), 'default', array('class' => 'success'));
+				$this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__d('croogo', 'The fld could not be saved. Please, try again.'), 'default', array('class' => 'error'));
+			}
+		} else {
+			$options = array('conditions' => array('Fld.' . $this->Fld->primaryKey => $id));
+			$this->request->data = $this->Fld->find('first', $options);
+		}
+		$pobjects = $this->Fld->Pobject->find('list');
+		$ftypes = $this->Fld->Ftype->find('list');
+		$fldbehaviors = $this->Fld->Fldbehavior->find('list');
+		$this->set(compact('pobjects', 'ftypes', 'fldbehaviors'));
+	}
+
+/**
+ * admin_delete method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $id
+ * @return void
+ */
+	public function admin_delete($id = null) {
+		$this->Fld->id = $id;
+		if (!$this->Fld->exists()) {
+			throw new NotFoundException(__d('croogo', 'Invalid fld'));
+		}
+		$this->request->onlyAllow('post', 'delete');
+		if ($this->Fld->delete()) {
+			$this->Session->setFlash(__d('croogo', 'Fld deleted'), 'default', array('class' => 'success'));
+			$this->redirect(array('action' => 'index'));
+		}
+		$this->Session->setFlash(__d('croogo', 'Fld was not deleted'), 'default', array('class' => 'error'));
+		$this->redirect(array('action' => 'index'));
+	}}
