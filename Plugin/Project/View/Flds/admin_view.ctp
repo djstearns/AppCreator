@@ -34,7 +34,7 @@ $this->Html
 		</dd>
 		<dt><?php echo __d('croogo', 'Pobject'); ?></dt>
 		<dd>
-			<?php echo $this->Html->link($fld['Pobject']['id'], array('controller' => 'pobjects', 'action' => 'view', $fld['Pobject']['id'])); ?>
+			<?php echo $this->Html->link($fld['Pobject']['name'], array('controller' => 'pobjects', 'action' => 'view', $fld['Pobject']['id'])); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __d('croogo', 'Name'); ?></dt>
@@ -45,6 +45,11 @@ $this->Html
 		<dt><?php echo __d('croogo', 'Ftype'); ?></dt>
 		<dd>
 			<?php echo $this->Html->link($fld['Ftype']['name'], array('controller' => 'ftypes', 'action' => 'view', $fld['Ftype']['id'])); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __d('croogo', 'Length'); ?></dt>
+		<dd>
+			<?php echo h($fld['Fld']['length']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __d('croogo', 'Created'); ?></dt>

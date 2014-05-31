@@ -6,6 +6,7 @@
 			<th><?php echo $this->Paginator->sort('pobject_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('name'); ?></th>
 			<th><?php echo $this->Paginator->sort('ftype_id'); ?></th>
+			<th><?php echo $this->Paginator->sort('length'); ?></th>
 			<th><?php echo $this->Paginator->sort('created'); ?></th>
 			<th><?php echo $this->Paginator->sort('modified'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
@@ -14,12 +15,13 @@
 	<tr>
 		<td><?php echo h($fld['Fld']['id']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($fld['Pobject']['id'], array('controller' => 'pobjects', 'action' => 'view', $fld['Pobject']['id'])); ?>
+			<?php echo $this->Html->link($fld['Pobject']['name'], array('controller' => 'pobjects', 'action' => 'view', $fld['Pobject']['id'])); ?>
 		</td>
 		<td><?php echo h($fld['Fld']['name']); ?>&nbsp;</td>
 		<td>
 			<?php echo $this->Html->link($fld['Ftype']['name'], array('controller' => 'ftypes', 'action' => 'view', $fld['Ftype']['id'])); ?>
 		</td>
+		<td><?php echo h($fld['Fld']['length']); ?>&nbsp;</td>
 		<td><?php echo h($fld['Fld']['created']); ?>&nbsp;</td>
 		<td><?php echo h($fld['Fld']['modified']); ?>&nbsp;</td>
 		<td class="actions">

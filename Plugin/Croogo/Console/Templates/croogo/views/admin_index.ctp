@@ -23,6 +23,22 @@ echo $header;
 	<?php foreach ($fields as $field): ?>
 	<th><?php echo "<?php echo \$this->Paginator->sort('{$field}'); ?>"; ?></th>
 	<?php endforeach; ?>
+	<?php
+	if (!empty($associations['hasAndBelongsToMany'])) {
+			foreach ($associations['hasAndBelongsToMany'] as $alias => $details) {
+				
+				/*echo "\t\t<td><?php foreach(\$kiddata[\$i-1]['$alias'] as \$alias){ echo \$this->Html->link(\$alias['{$details['displayField']}'], array('controller' => '{$alias}s', 'action' => 'view', \$alias['{$details['primaryKey']}'])); } ?></td>\n";
+				*/
+				echo "
+				  <?php \$i = 0;\n \$arr = array(); 
+				 foreach(\${$singularVar}data[\$i-1]['$alias'] as \${$alias}){ \$arr[] = \${$alias}['{$details['displayField']}']; }
+					\$str = implode(',',\$arr); 
+					echo '<th>{$alias}</th>'\n";
+			
+			}
+			echo " ?>\n";
+		}
+	?>
 	<th class="actions"><?php echo "<?php echo __d('croogo', 'Actions'); ?>"; ?></th>
 	</tr>
 
@@ -44,7 +60,7 @@ echo $header;
 						$isKey = true;
 						/*echo "\t\t<td>\n\t\t\t<?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$details['displayField']}'], array('controller' => '{$details['controller']}', 'action' => 'view', \${$singularVar}['{$alias}']['{$details['primaryKey']}'])); ?>\n\t\t</td>\n";
 						*/
-						echo "\t\t<td><?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$displayField}'], '#', array('id'=>'{$field}','data-url'=>'editindexsavefld', 'data-type'=>'select2', 'data-pk'=> \${$singularVar}['{$modelClass}']['{$primaryKey}'], 'class'=>'editable editable-click dclass-".$alias."', 'style'=>'display: inline;')); ?></td>\n";
+						echo "\t\t<td><?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$displayField}'], '#', array('id'=>'{$field}','data-url'=>\$this->here.'/editindexsavefld', 'data-type'=>'select2', 'data-pk'=> \${$singularVar}['{$modelClass}']['{$primaryKey}'], 'class'=>'editable editable-click dclass-".$alias."', 'style'=>'display: inline;')); ?></td>\n";
 						
 						/*
 						echo "\t\t<td><?php echo \$this->Html->link(\${$singularVar}['{$alias}']['{$displayField}'], '#', array('data-source'=>json_encode(\$".strtolower($alias)."s) ,'id'=>'{$field}','data-url'=>'editindexsavefld', 'data-type'=>'select2', 'data-pk'=> \${$singularVar}['{$modelClass}']['{$primaryKey}'], 'class'=>'editable editable-click', 'style'=>'display: inline;')); ?></td>\n";
@@ -58,7 +74,7 @@ echo $header;
 				/*
 					echo "\t\t<td><?php echo \${$singularVar}['{$modelClass}']['{$field}']; ?>&nbsp;</td>\n";
 				*/
-				echo "\t\t<td><?php echo \$this->Html->link(\${$singularVar}['{$modelClass}']['{$field}'], '#', array('id'=>'{$field}','data-url'=>'editindexsavefld', 'data-type'=>'text', 'data-pk'=> \${$singularVar}['{$modelClass}']['{$primaryKey}'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>\n";
+				echo "\t\t<td><?php echo \$this->Html->link(\${$singularVar}['{$modelClass}']['{$field}'], '#', array('id'=>'{$field}','data-url'=>\$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> \${$singularVar}['{$modelClass}']['{$primaryKey}'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>\n";
 			}
 			
 			
@@ -73,9 +89,9 @@ echo $header;
 				 <td> <?php \$arr = array(); 
 				 foreach(\${$singularVar}data[\$i-1]['$alias'] as \${$alias}){ \$arr[] = \${$alias}['{$details['displayField']}']; }
 					\$str = implode(',',\$arr); 
-					echo \$this->Html->link(\$str, '#', array( 'id'=>'{$alias}__{$details['displayField']}','data-url'=>'savehabtmfld', 'data-type'=>'select2', 'data-pk'=> \${$singularVar}['{$modelClass}']['{$primaryKey}'], 'class'=>'editable editable-click mclass-{$alias}', 'style'=>'display: inline;')); ?></td>
+					echo \$this->Html->link(\$str, '#', array( 'id'=>'{$alias}__{$details['displayField']}','data-url'=>\$this->here.'/savehabtmfld', 'data-type'=>'select2', 'data-pk'=> \${$singularVar}['{$modelClass}']['{$primaryKey}'], 'class'=>'editable editable-click mclass-{$alias}', 'style'=>'display: inline;')); ?></td>
 				";
-				
+				echo "\t</td>\n";
 			}
 			
 		}

@@ -17,9 +17,17 @@ $this->Html
 		<th><?php echo $this->Paginator->sort('pobject_id'); ?></th>
 		<th><?php echo $this->Paginator->sort('name'); ?></th>
 		<th><?php echo $this->Paginator->sort('ftype_id'); ?></th>
+		<th><?php echo $this->Paginator->sort('length'); ?></th>
 		<th><?php echo $this->Paginator->sort('created'); ?></th>
 		<th><?php echo $this->Paginator->sort('modified'); ?></th>
-		<th class="actions"><?php echo __d('croogo', 'Actions'); ?></th>
+		
+				  <?php $i = 0;
+ $arr = array(); 
+				 foreach($flddata[$i-1]['Fldbehavior'] as $Fldbehavior){ $arr[] = $Fldbehavior['name']; }
+					$str = implode(',',$arr); 
+					echo '<th>Fldbehavior</th>'
+ ?>
+	<th class="actions"><?php echo __d('croogo', 'Actions'); ?></th>
 	</tr>
 
 	<?php $i = 0; ?>
@@ -28,32 +36,19 @@ $this->Html
 	<td>
 <?php echo $this->Form->input($fld['Fld']['id'], array('type'=>'checkbox','label'=>false)); ?>
 	</td>
+		<td><?php echo $this->Html->link($fld['Fld']['id'], '#', array('id'=>'id','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
+		<td><?php echo $this->Html->link($fld['Pobject']['name'], '#', array('id'=>'pobject_id','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'select2', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click dclass-Pobject', 'style'=>'display: inline;')); ?></td>
+		<td><?php echo $this->Html->link($fld['Fld']['name'], '#', array('id'=>'name','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
+		<td><?php echo $this->Html->link($fld['Ftype']['name'], '#', array('id'=>'ftype_id','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'select2', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click dclass-Ftype', 'style'=>'display: inline;')); ?></td>
+		<td><?php echo $this->Html->link($fld['Fld']['length'], '#', array('id'=>'length','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
+		<td><?php echo $this->Html->link($fld['Fld']['created'], '#', array('id'=>'created','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
+		<td><?php echo $this->Html->link($fld['Fld']['modified'], '#', array('id'=>'modified','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
 
-					 
-							<td>
-			<?php echo $this->Html->link($fld['Fld']['id'], '#', array('class'=>'editable editable-click jclass', 'style'=>'display: inline;', 'data-type'=>'text', 'id'=>'id', 'data-url'=>'projects/editindexsavefld', 'data-pk'=> $fld['Fld']['id'])); ?>
-		</td>
-		
-			<td><?php echo $this->Html->link($fld['Pobject']['tablename'], '#', array('id'=>'pobject_id','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'select2', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click dclass-Pobject', 'style'=>'display: inline;')); ?>
-		</td>
-
-					
-							<td>
-			<?php echo $this->Html->link($fld['Fld']['name'], '#', array('class'=>'editable editable-click jclass', 'style'=>'display: inline;', 'data-type'=>'text', 'id'=>'name', 'data-url'=>'projects/editindexsavefld', 'data-pk'=> $fld['Fld']['id'])); ?>
-		</td>
-		<td>
-			<?php echo $this->Html->link($fld['Ftype']['name'], array('controller' => 'ftypes', 'action' => 'view', $fld['Ftype']['id'])); ?>
-		</td>
-
-					
-							<td>
-			<?php echo $this->Html->link($fld['Fld']['created'], '#', array('class'=>'editable editable-click jclass', 'style'=>'display: inline;', 'data-type'=>'text', 'id'=>'created', 'data-url'=>'projects/editindexsavefld', 'data-pk'=> $fld['Fld']['id'])); ?>
-		</td>
-
-					 
-							<td>
-			<?php echo $this->Html->link($fld['Fld']['modified'], '#', array('class'=>'editable editable-click jclass', 'style'=>'display: inline;', 'data-type'=>'text', 'id'=>'modified', 'data-url'=>'projects/editindexsavefld', 'data-pk'=> $fld['Fld']['id'])); ?>
-		</td>
+				 <td> <?php $arr = array(); 
+				 foreach($flddata[$i-1]['Fldbehavior'] as $Fldbehavior){ $arr[] = $Fldbehavior['name']; }
+					$str = implode(',',$arr); 
+					echo $this->Html->link($str, '#', array( 'id'=>'Fldbehavior__name','data-url'=>$this->here.'/savehabtmfld', 'data-type'=>'select2', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click mclass-Fldbehavior', 'style'=>'display: inline;')); ?></td>
+					</td>
 		<td class="item-actions">
 			<?php echo $this->Croogo->adminRowAction('', array('action' => 'view', $fld['Fld']['id']), array('icon' => 'eye-open')); ?>
 			<?php echo $this->Croogo->adminRowAction('', array('action' => 'edit', $fld['Fld']['id']), array('icon' => 'pencil')); ?>

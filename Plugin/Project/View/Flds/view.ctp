@@ -8,7 +8,7 @@
 		</dd>
 		<dt><?php echo __('Pobject'); ?></dt>
 		<dd>
-			<?php echo $this->Html->link($fld['Pobject']['id'], array('controller' => 'pobjects', 'action' => 'view', $fld['Pobject']['id'])); ?>
+			<?php echo $this->Html->link($fld['Pobject']['name'], array('controller' => 'pobjects', 'action' => 'view', $fld['Pobject']['id'])); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Name'); ?></dt>
@@ -19,6 +19,11 @@
 		<dt><?php echo __('Ftype'); ?></dt>
 		<dd>
 			<?php echo $this->Html->link($fld['Ftype']['name'], array('controller' => 'ftypes', 'action' => 'view', $fld['Ftype']['id'])); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Length'); ?></dt>
+		<dd>
+			<?php echo h($fld['Fld']['length']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Created'); ?></dt>

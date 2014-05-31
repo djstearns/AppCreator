@@ -39,6 +39,9 @@ echo $this->Form->create('Fld');
 				echo $this->Form->input('ftype_id', array(
 					'label' => 'Ftype Id',
 				));
+				echo $this->Form->input('length', array(
+					'label' => 'Length',
+				));
 				echo $this->Form->input('Fldbehavior');
 			?>
 			</div>

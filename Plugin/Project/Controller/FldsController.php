@@ -8,7 +8,7 @@ App::uses('ProjectAppController', 'Project.Controller');
  */
 class FldsController extends ProjectAppController {
 
-	public function beforeFilter() {
+    public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Security->unlockedActions = array('editindexsavefld','admin_editindexsavefld','admin_add');
 		
@@ -22,14 +22,87 @@ class FldsController extends ProjectAppController {
 	public $components = array('Paginator');
 
 /**
- * index method
+ * indexold method
  *
  * @return void
  */
-	public function index() {
+	public function indexOLD() {
 		$this->Fld->recursive = 0;
 		$this->set('flds', $this->paginate());
 	}
+    
+    
+ /**
+ * index method
+ *
+ * @return void
+ */ 
+          function index() {
+            //$this->Fld->recursive = 0;
+            $this->set('flds', $this->paginate());
+             //check if this is a relationship table
+                                     $flddata = $this->Fld->find('all');
+                        
+           
+           
+                        
+            		$pobjects = $this->Fld->Pobject->find('list');
+		$ftypes = $this->Fld->Ftype->find('list');
+		$fldbehaviors = $this->Fld->Fldbehavior->find('list');
+
+                            $arr = array();
+                            foreach($fldbehaviors as $item => $i){
+                                $arr[] = $i;
+                            }
+                            $fldbehaviorstr = json_encode($arr);
+                        		$this->set(compact('flddata', 'pobjects', 'ftypes', 'fldbehaviorstr'));
+            
+        
+	}
+  
+  
+  
+  
+  
+    
+    
+     function deleteall() {
+		$this->autoRender = false;
+        
+  		$this->autoRender = false;
+		$arr = array();
+		foreach($this->data['Fld'] as $fld_id => $del){
+			if($del == 1 ){$arr[] = $fld_id;}
+		}
+		if($this->Fld->deleteAll(array('Fld.id'=>$arr))) {
+			$this->Session->setFlash(__('Deleted.', true));
+			$this->redirect(array('action' => 'editindex'));
+		
+		}else{
+			$this->Session->setFlash(__('Could not be deleted.', true));
+			$this->redirect(array('action' => 'editindex'));
+		}
+
+	}
+    
+  
+  
+    
+    function editindexsavefld() {
+		$this->autoRender = false;
+		$this->Fld->id = $_POST['pk'];
+		
+		if($this->Fld->saveField($_POST['name'],$_POST['value'])) {
+			$response = true;	
+		} else {
+			$response = false;
+		}
+		echo json_encode($response);
+	}
+    
+  
+  
+    
 
 /**
  * view method
@@ -46,6 +119,8 @@ class FldsController extends ProjectAppController {
 		$this->set('fld', $this->Fld->find('first', $options));
 	}
 
+
+
 /**
  * add method
  *
@@ -61,12 +136,14 @@ class FldsController extends ProjectAppController {
 				$this->Session->setFlash(__d('croogo', 'The fld could not be saved. Please, try again.'), 'default', array('class' => 'error'));
 			}
 		}
-		
 		$pobjects = $this->Fld->Pobject->find('list');
 		$ftypes = $this->Fld->Ftype->find('list');
 		$fldbehaviors = $this->Fld->Fldbehavior->find('list');
 		$this->set(compact('pobjects', 'ftypes', 'fldbehaviors'));
 	}
+
+
+
 
 /**
  * edit method
@@ -119,27 +196,87 @@ class FldsController extends ProjectAppController {
 	}
 
 /**
- * admin_index method
+ * admin_indexold method
  *
  * @return void
  */
-	public function admin_index() {
-		//$this->Fld->recursive = 0;
+	public function admin_indexOLD() {
+		$this->Fld->recursive = 0;
 		$this->set('flds', $this->paginate());
-		$flddata = $this->Fld->find('all');
-		
-		$pobjects = $this->Fld->Pobject->find('list');
+	}
+    
+    
+ /**
+ * admin_index method
+ *
+ * @return void
+ */ 
+          function admin_index() {
+            //$this->Fld->recursive = 0;
+            $this->set('flds', $this->paginate());
+             //check if this is a relationship table
+                                     $flddata = $this->Fld->find('all');
+                        
+           
+           
+                        
+            		$pobjects = $this->Fld->Pobject->find('list');
 		$ftypes = $this->Fld->Ftype->find('list');
 		$fldbehaviors = $this->Fld->Fldbehavior->find('list');
-	
-		$arr = array();
-		foreach($fldbehaviors as $item => $i){
-			$arr[] = $i;
-		}
-		$fldbehaviorstr = json_encode($arr);
-		$this->set(compact('flddata', 'pobjects', 'ftypes', 'fldbehaviorstr'));
+
+                            $arr = array();
+                            foreach($fldbehaviors as $item => $i){
+                                $arr[] = $i;
+                            }
+                            $fldbehaviorstr = json_encode($arr);
+                        		$this->set(compact('flddata', 'pobjects', 'ftypes', 'fldbehaviorstr'));
+            
         
 	}
+  
+  
+  
+  
+  
+    
+    
+     function admin_deleteall() {
+		$this->autoRender = false;
+        
+  		$this->autoRender = false;
+		$arr = array();
+		foreach($this->data['Fld'] as $fld_id => $del){
+			if($del == 1 ){$arr[] = $fld_id;}
+		}
+		if($this->Fld->deleteAll(array('Fld.id'=>$arr))) {
+			$this->Session->setFlash(__('Deleted.', true));
+			$this->redirect(array('action' => 'editindex'));
+		
+		}else{
+			$this->Session->setFlash(__('Could not be deleted.', true));
+			$this->redirect(array('action' => 'editindex'));
+		}
+
+	}
+    
+  
+  
+    
+    function admin_editindexsavefld() {
+		$this->autoRender = false;
+		$this->Fld->id = $_POST['pk'];
+		
+		if($this->Fld->saveField($_POST['name'],$_POST['value'])) {
+			$response = true;	
+		} else {
+			$response = false;
+		}
+		echo json_encode($response);
+	}
+    
+  
+  
+    
 
 /**
  * admin_view method
@@ -156,6 +293,8 @@ class FldsController extends ProjectAppController {
 		$this->set('fld', $this->Fld->find('first', $options));
 	}
 
+
+
 /**
  * admin_add method
  *
@@ -164,8 +303,6 @@ class FldsController extends ProjectAppController {
 	public function admin_add() {
 		if ($this->request->is('post')) {
 			$this->Fld->create();
-			//debugger::dump($this->request->data);
-			//exit();
 			if ($this->Fld->save($this->request->data)) {
 				$this->Session->setFlash(__d('croogo', 'The fld has been saved'), 'default', array('class' => 'success'));
 				$this->redirect(array('action' => 'index'));
@@ -173,12 +310,14 @@ class FldsController extends ProjectAppController {
 				$this->Session->setFlash(__d('croogo', 'The fld could not be saved. Please, try again.'), 'default', array('class' => 'error'));
 			}
 		}
-		$fldbehaviorstr = '';
 		$pobjects = $this->Fld->Pobject->find('list');
 		$ftypes = $this->Fld->Ftype->find('list');
 		$fldbehaviors = $this->Fld->Fldbehavior->find('list');
-		$this->set(compact('pobjects', 'ftypes', 'fldbehaviors','fldbehaviorstr'));
+		$this->set(compact('pobjects', 'ftypes', 'fldbehaviors'));
 	}
+
+
+
 
 /**
  * admin_edit method
