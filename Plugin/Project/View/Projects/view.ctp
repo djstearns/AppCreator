@@ -1,41 +1,39 @@
 <div class="projects view">
-<h2><?php  __('Project');?></h2>
-	<dl><?php $i = 0; $class = ' class="altrow"';?>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Id'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['id']; ?>
+<h2><?php echo __('Project'); ?></h2>
+	<dl>
+		<dt><?php echo __('Id'); ?></dt>
+		<dd>
+			<?php echo h($project['Project']['id']); ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Name'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['name']; ?>
+		<dt><?php echo __('Name'); ?></dt>
+		<dd>
+			<?php echo h($project['Project']['name']); ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Description'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['description']; ?>
+		<dt><?php echo __('Description'); ?></dt>
+		<dd>
+			<?php echo h($project['Project']['description']); ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('User'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $this->Html->link($project['User']['name'], array('controller' => 'users', 'action' => 'view', $project['User']['id'])); ?>
+		<dt><?php echo __('User Id'); ?></dt>
+		<dd>
+			<?php echo h($project['Project']['user_id']); ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Host'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['host']; ?>
+		<dt><?php echo __('Host'); ?></dt>
+		<dd>
+			<?php echo h($project['Project']['host']); ?>
 			&nbsp;
 		</dd>
 	</dl>
 </div>
 <div class="actions">
-	<h3><?php __('Actions'); ?></h3>
+	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Edit Project', true), array('action' => 'edit', $project['Project']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('Delete Project', true), array('action' => 'delete', $project['Project']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $project['Project']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Projects', true), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Project', true), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Users', true), array('controller' => 'users', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New User', true), array('controller' => 'users', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('Edit Project'), array('action' => 'edit', $project['Project']['id'])); ?> </li>
+		<li><?php echo $this->Form->postLink(__('Delete Project'), array('action' => 'delete', $project['Project']['id']), null, __('Are you sure you want to delete # %s?', $project['Project']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('List Projects'), array('action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Project'), array('action' => 'add')); ?> </li>
 	</ul>
 </div>

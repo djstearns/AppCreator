@@ -6,19 +6,19 @@
 		"locale": "eng",
 		"status": 1,
 		"tagline": "A CakePHP powered Content Management System.",
-		"theme": "Bootstrap-Responsive-Croogo-master",
+		"theme": "",
 		"timezone": 0,
 		"title": "Croogo"
 	},
 	"Hook": {
-		"bootstraps": "Settings,Comments,Contacts,Nodes,Meta,Menus,Users,Blocks,Taxonomy,FileManager,Wysiwyg,Ckeditor,Project"
+		"bootstraps": "Settings,Comments,Contacts,Nodes,Meta,Menus,Users,Blocks,Taxonomy,FileManager,Wysiwyg,Project,Ckeditor,Jamiesapp"
 	},
 	"Croogo": {
 		"installed": 1,
 		"version": "1.5.7"
 	},
 	"Access Control": {
-		"autoLoginDuration": "+1 week",
+		"autoLoginDuration": "",
 		"models": "",
 		"multiRole": 0,
 		"rowLevel": 0

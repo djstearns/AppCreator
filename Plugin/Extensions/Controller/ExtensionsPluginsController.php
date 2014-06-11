@@ -35,6 +35,7 @@ class ExtensionsPluginsController extends ExtensionsAppController {
 		'Settings.Setting',
 		'Users.User',
 	);
+	
 
 /**
  * BC compatibility
@@ -55,9 +56,10 @@ class ExtensionsPluginsController extends ExtensionsAppController {
 
 		$this->_CroogoPlugin = new CroogoPlugin();
 		$this->_CroogoPlugin->setController($this);
-
+		
 		$this->Security->requirePost[] = 'admin_moveup';
 		$this->Security->requirePost[] = 'admin_movedown';
+
 	}
 
 /**
@@ -136,6 +138,7 @@ class ExtensionsPluginsController extends ExtensionsAppController {
 			$this->Session->setFlash(__d('croogo', 'Invalid plugin'), 'default', array('class' => 'error'));
 			$this->redirect(array('action' => 'index'));
 		}
+		
 
 		if ($this->_CroogoPlugin->isActive($plugin)) {
 			$result = $this->_CroogoPlugin->deactivate($plugin);
@@ -148,6 +151,7 @@ class ExtensionsPluginsController extends ExtensionsAppController {
 			}
 		} else {
 			$result = $this->_CroogoPlugin->activate($plugin);
+			
 			if ($result === true) {
 				$this->Session->setFlash(__d('croogo', 'Plugin "%s" activated successfully.', $plugin), 'default', array('class' => 'success'));
 			} elseif (is_string($result)) {

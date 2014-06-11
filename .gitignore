@@ -1,3 +1,10 @@
 
 tmp/
 locale/
+*dwsync.xml
+*empty
+*.profile
+*.bash_profile
+*/Jamiesapp
+*/Kitinventory/
+*webroot/mobile/*

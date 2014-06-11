@@ -16,7 +16,7 @@ if ($this->action == 'admin_edit') {
 echo $this->Form->create('Project');
 
 ?>
-<div class="widgets row-fluid">
+<div class="projects row-fluid">
 	<div class="span8">
 		<ul class="nav nav-tabs">
 		<?php
@@ -28,17 +28,21 @@ echo $this->Form->create('Project');
 		<div class="tab-content">
 			<div id='project' class="tab-pane">
 			<?php
-				echo $this->Form->input('id', array('type'=>'hidden'));
-				$this->Form->inputDefaults(array( 'class' => 'span10'));
-				
-                    echo $this->Form->input('name');
-                    echo $this->Form->input('description');
-            		echo $this->Form->input('user_id');
-                    echo $this->Form->input('host');
-                    echo $this->Form->input('key');
-                ?>
-            
-
+				echo $this->Form->input('id');
+				$this->Form->inputDefaults(array('label' => false, 'class' => 'span10'));
+				echo $this->Form->input('name', array(
+					'label' => 'Name',
+				));
+				echo $this->Form->input('description', array(
+					'label' => 'Description',
+				));
+				echo $this->Form->input('user_id', array(
+					'label' => 'User Id',
+				));
+				echo $this->Form->input('host', array(
+					'label' => 'Host',
+				));
+			?>
 			</div>
 			<?php echo $this->Croogo->adminTabs(); ?>
 		</div>

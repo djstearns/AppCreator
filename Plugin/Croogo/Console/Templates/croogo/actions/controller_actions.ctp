@@ -88,12 +88,42 @@
         
 	}
   
+  /*
+     function savehabtmfld(){
   
-  
-  
-  
+		$this->autoRender = false;
+		$this-><?php echo $currentModelName ?>->id = $_POST['pk'];
+        $tr = substr($_POST['name'],0,strpos($_POST['name'],'__'));
+		$ids = $this-><?php echo $currentModelName ?>->$tr->find('list', array('fields'=>array('id'), 'conditions'=>array(str_replace('__','.',$_POST['name'])=>$_POST['value'])));
+		$this->data = array('<?php echo $currentModelName ?>'=>array('id'=>$_POST['pk']),substr($_POST['name'],0,strpos($_POST['name'],'__'))=>array(substr($_POST['name'],0,strpos($_POST['name'],'__'))=>$ids));
+		
+		if($this-><?php echo $currentModelName ?>->save($this->data)) {
+			$response = true;
+				
+		} else {
+			$response = false;
+		}
+		echo json_encode($response);
+	}
     
     
+     function admin_savehabtmfld(){
+  
+		$this->autoRender = false;
+		$this-><?php echo $currentModelName ?>->id = $_POST['pk'];
+        $tr = substr($_POST['name'],0,strpos($_POST['name'],'__'));
+		$ids = $this-><?php echo $currentModelName ?>->$tr->find('list', array('fields'=>array('id'), 'conditions'=>array(str_replace('__','.',$_POST['name'])=>$_POST['value'])));
+		$this->data = array('<?php echo $currentModelName ?>'=>array('id'=>$_POST['pk']),substr($_POST['name'],0,strpos($_POST['name'],'__'))=>array(substr($_POST['name'],0,strpos($_POST['name'],'__'))=>$ids));
+		
+		if($this-><?php echo $currentModelName ?>->save($this->data)) {
+			$response = true;
+				
+		} else {
+			$response = false;
+		}
+		echo json_encode($response);
+	}
+  */
      function <?php echo $admin ?>deleteall() {
 		$this->autoRender = false;
         

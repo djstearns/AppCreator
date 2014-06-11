@@ -1,161 +1,64 @@
 <?php
+App::uses('ProjectAppController', 'Project.Controller');
+/**
+ * Pobjectbehaviors Controller
+ *
+ * @property Pobjectbehavior $Pobjectbehavior
+ * @property PaginatorComponent $Paginator
+ */
 class PobjectbehaviorsController extends ProjectAppController {
 
-	var $name = 'Pobjectbehaviors';
-	 public function beforeFilter() {
-       parent::beforeFilter();
+public function beforeFilter() {
+		parent::beforeFilter();
+		$this->Security->unlockedActions = array('editindexsavefld','admin_editindexsavefld','admin_savehabtmfld','savehabtmfld');
+		
+	}
 
-    }
+/**
+ * Components
+ *
+ * @var array
+ */
+	public $components = array('Paginator');
 
-	function indexOLD() {
+/**
+ * indexold method
+ *
+ * @return void
+ */
+	public function indexOLD() {
 		$this->Pobjectbehavior->recursive = 0;
 		$this->set('pobjectbehaviors', $this->paginate());
 	}
     
-    function mobileindex() {
-		$this->Pobjectbehavior->recursive = -1;
-		$this->autoRender = false;
-		$check = $this->Pobjectbehavior->find('all', array('limit'=>200));
-		$save = array();
-		if($check) {
-			
-			$response = $check;
-				
-		} else {
-			$response = array(
-				'logged' => false,
-				'message' => 'Invalid user'
-			);
-		}
-		echo json_encode($response);
-	}
     
-    function mobileadd() {
-		$this->autoRender = false;
-		$this->data['Pobjectbehavior']=$_POST;
-		$this->Pobjectbehavior->create();
-		if ($this->Pobjectbehavior->save($this->data)) {
-			$check = array(
-			'logged' => false,
-			'message' => 'Saved!',
-			'id'=>$this->Pobjectbehavior->getLastInsertId()
-			);	
-		} else {
-			$this->Session->setFlash(__('The Pobjectbehavior could not be saved. Please, try again.', true));
-		}
-		if($check) {
-			
-			$response = $check;
-				
-		} else {
-			$response = array(
-				'logged' => false,
-				'message' => 'Invalid user'
-			);
-		}
-		echo json_encode($response);
-	}
-    
-     function mobilesave() {
-		$this->autoRender = false;
-        $this->Pobjectbehavior->id=$_POST['id'];
-		$this->data['Pobjectbehavior']=$_POST;
-		if ($this->Pobjectbehavior->save($this->data)) {
-			$check = array(
-			'logged' => false,
-			'message' => 'Saved!',
-			);	
-		} else {
-			$this->Session->setFlash(__('The Pobjectbehavior could not be saved. Please, try again.', true));
-		}
-		if($check) {
-			
-			$response = $check;
-				
-		} else {
-			$response = array(
-				'logged' => false,
-				'message' => 'Invalid Pobjectbehavior'
-			);
-		}
-		echo json_encode($response);
-	}
-    
-    function mobiledelete($id = null) {
-		if (!$id) {
-			$response = array(
-						'logged' => false,
-						'message' => 'Pobjectbehavior did not exist remotely!'
-					);
-			
-		}
-		if ($this->Pobjectbehavior->delete($id)) {
-			$response = array(
-						'logged' => false,
-						'message' => 'Pobjectbehavior deleted!'
-					);
-					
-		}else{
-			$response = array(
-						'logged' => false,
-						'id'=>$id,
-						'message' => 'Pobjectbehavior not deleted!'
-					);
-		}
-					
-		echo json_encode($response);
-	}
-    
-    function editindexsavefld() {
-		$this->autoRender = false;
-		$this->Pobjectbehavior->id = $_POST['pk'];
-		
-		if($this->Pobjectbehavior->saveField($_POST['name'],$_POST['value'])) {
-			$response = true;	
-		} else {
-			$response = false;
-		}
-		echo json_encode($response);
-	}
-    
-        function index() {
-		//$this->Pobjectbehavior->recursive = 0;
-		$this->set('pobjectbehaviors', $this->paginate());
-         //check if this is a relationship table
-        			   		 $pobjectbehaviordata = $this->Pobjectbehavior->find('all');
-		        
-       
-       
-		        
-        		$pobjects = $this->Pobjectbehavior->Pobject->find('list');
+ /**
+ * index method
+ *
+ * @return void
+ */ 
+          function index() {
+            //$this->Pobjectbehavior->recursive = 0;
+            $this->set('pobjectbehaviors', $this->paginate());
+             //check if this is a relationship table
+                                     $pobjectbehaviordata = $this->Pobjectbehavior->find('all');
+                        
+           
+           
+                        
+            		$pobjects = $this->Pobjectbehavior->Pobject->find('list');
 
-						$arr = array();
-						foreach($pobjects as $item => $i){
-							$arr[] = $i;
-						}
-						$pobjectstr = json_encode($arr);
-							$this->set(compact('pobjectbehaviordata', 'pobjectstr'));
-        
+                            $arr = array();
+                            foreach($pobjects as $item => $i){
+                                $arr[] = $i;
+                            }
+                            $pobjectstr = json_encode($arr);
+                        		$this->set(compact('pobjectbehaviordata', 'pobjectstr'));
+            
         
 	}
-    
-     function savehabtmfld(){
   
-		$this->autoRender = false;
-		$this->Pobjectbehavior->id = $_POST['pk'];
-        $tr = substr($_POST['name'],0,strpos($_POST['name'],'__'));
-		$ids = $this->Pobjectbehavior->$tr->find('list', array('fields'=>array('id'), 'conditions'=>array(str_replace('__','.',$_POST['name'])=>$_POST['value'])));
-		$this->data = array('Pobjectbehavior'=>array('id'=>$_POST['pk']),substr($_POST['name'],0,strpos($_POST['name'],'__'))=>array(substr($_POST['name'],0,strpos($_POST['name'],'__'))=>$ids));
-		
-		if($this->Pobjectbehavior->save($this->data)) {
-			$response = true;
-				
-		} else {
-			$response = false;
-		}
-		echo json_encode($response);
-	}
-    
+  
     
      function deleteall() {
 		$this->autoRender = false;
@@ -176,59 +79,306 @@ class PobjectbehaviorsController extends ProjectAppController {
 
 	}
     
-
-	function view($id = null) {
-		if (!$id) {
-			$this->Session->setFlash(__('Invalid pobjectbehavior', true));
-			$this->redirect(array('action' => 'index'));
+  
+  
+    
+    function editindexsavefld() {
+		$this->autoRender = false;
+		$this->Pobjectbehavior->id = $_POST['pk'];
+		
+		if($this->Pobjectbehavior->saveField($_POST['name'],$_POST['value'])) {
+			$response = true;	
+		} else {
+			$response = false;
 		}
-		$this->set('pobjectbehavior', $this->Pobjectbehavior->read(null, $id));
+		echo json_encode($response);
+	}
+    
+  
+  
+    
+
+/**
+ * view method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function view($id = null) {
+		if (!$this->Pobjectbehavior->exists($id)) {
+			throw new NotFoundException(__d('croogo', 'Invalid pobjectbehavior'));
+		}
+		$options = array('conditions' => array('Pobjectbehavior.' . $this->Pobjectbehavior->primaryKey => $id));
+		$this->set('pobjectbehavior', $this->Pobjectbehavior->find('first', $options));
 	}
 
-	function add() {
-		if (!empty($this->data)) {
+
+
+/**
+ * add method
+ *
+ * @return void
+ */
+	public function add() {
+		if ($this->request->is('post')) {
 			$this->Pobjectbehavior->create();
-			if ($this->Pobjectbehavior->save($this->data)) {
-				$this->Session->setFlash(__('The pobjectbehavior has been saved', true));
+			if ($this->Pobjectbehavior->save($this->request->data)) {
+				$this->Session->setFlash(__d('croogo', 'The pobjectbehavior has been saved'), 'default', array('class' => 'success'));
 				$this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The pobjectbehavior could not be saved. Please, try again.', true));
+				$this->Session->setFlash(__d('croogo', 'The pobjectbehavior could not be saved. Please, try again.'), 'default', array('class' => 'error'));
 			}
 		}
 		$pobjects = $this->Pobjectbehavior->Pobject->find('list');
 		$this->set(compact('pobjects'));
 	}
 
-	function edit($id = null) {
-		if (!$id && empty($this->data)) {
-			$this->Session->setFlash(__('Invalid pobjectbehavior', true));
+
+
+
+/**
+ * edit method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function edit($id = null) {
+		if (!$this->Pobjectbehavior->exists($id)) {
+			throw new NotFoundException(__d('croogo', 'Invalid pobjectbehavior'));
+		}
+		if ($this->request->is('post') || $this->request->is('put')) {
+			if ($this->Pobjectbehavior->save($this->request->data)) {
+				$this->Session->setFlash(__d('croogo', 'The pobjectbehavior has been saved'), 'default', array('class' => 'success'));
+				$this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__d('croogo', 'The pobjectbehavior could not be saved. Please, try again.'), 'default', array('class' => 'error'));
+			}
+		} else {
+			$options = array('conditions' => array('Pobjectbehavior.' . $this->Pobjectbehavior->primaryKey => $id));
+			$this->request->data = $this->Pobjectbehavior->find('first', $options);
+		}
+		$pobjects = $this->Pobjectbehavior->Pobject->find('list');
+		$this->set(compact('pobjects'));
+	}
+
+/**
+ * delete method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $id
+ * @return void
+ */
+	public function delete($id = null) {
+		$this->Pobjectbehavior->id = $id;
+		if (!$this->Pobjectbehavior->exists()) {
+			throw new NotFoundException(__d('croogo', 'Invalid pobjectbehavior'));
+		}
+		$this->request->onlyAllow('post', 'delete');
+		if ($this->Pobjectbehavior->delete()) {
+			$this->Session->setFlash(__d('croogo', 'Pobjectbehavior deleted'), 'default', array('class' => 'success'));
 			$this->redirect(array('action' => 'index'));
 		}
-		if (!empty($this->data)) {
-			if ($this->Pobjectbehavior->save($this->data)) {
-				$this->Session->setFlash(__('The pobjectbehavior has been saved', true));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The pobjectbehavior could not be saved. Please, try again.', true));
-			}
-		}
-		if (empty($this->data)) {
-			$this->data = $this->Pobjectbehavior->read(null, $id);
-		}
-		$pobjects = $this->Pobjectbehavior->Pobject->find('list');
-		$this->set(compact('pobjects'));
-	}
-
-	function delete($id = null) {
-		if (!$id) {
-			$this->Session->setFlash(__('Invalid id for pobjectbehavior', true));
-			$this->redirect(array('action'=>'index'));
-		}
-		if ($this->Pobjectbehavior->delete($id)) {
-			$this->Session->setFlash(__('Pobjectbehavior deleted', true));
-			$this->redirect(array('action'=>'index'));
-		}
-		$this->Session->setFlash(__('Pobjectbehavior was not deleted', true));
+		$this->Session->setFlash(__d('croogo', 'Pobjectbehavior was not deleted'), 'default', array('class' => 'error'));
 		$this->redirect(array('action' => 'index'));
 	}
-}
+
+/**
+ * admin_indexold method
+ *
+ * @return void
+ */
+	public function admin_indexOLD() {
+		$this->Pobjectbehavior->recursive = 0;
+		$this->set('pobjectbehaviors', $this->paginate());
+	}
+    
+    
+ /**
+ * admin_index method
+ *
+ * @return void
+ */ 
+          function admin_index() {
+            //$this->Pobjectbehavior->recursive = 0;
+            $this->set('pobjectbehaviors', $this->paginate());
+             //check if this is a relationship table
+                                     $pobjectbehaviordata = $this->Pobjectbehavior->find('all');
+                        
+           
+           
+                        
+            		$pobjects = $this->Pobjectbehavior->Pobject->find('list');
+
+                            $arr = array();
+                            foreach($pobjects as $item => $i){
+                                $arr[] = $i;
+                            }
+                            $pobjectstr = json_encode($arr);
+                        		$this->set(compact('pobjectbehaviordata', 'pobjectstr'));
+            
+        
+	}
+  
+  
+     function savehabtmfld(){
+  
+		$this->autoRender = false;
+		$this->Pobjectbehavior->id = $_POST['pk'];
+        $tr = substr($_POST['name'],0,strpos($_POST['name'],'__'));
+		$ids = $this->Pobjectbehavior->$tr->find('list', array('fields'=>array('id'), 'conditions'=>array(str_replace('__','.',$_POST['name'])=>$_POST['value'])));
+		$this->data = array('Pobjectbehavior'=>array('id'=>$_POST['pk']),substr($_POST['name'],0,strpos($_POST['name'],'__'))=>array(substr($_POST['name'],0,strpos($_POST['name'],'__'))=>$ids));
+		
+		if($this->Pobjectbehavior->save($this->data)) {
+			$response = true;
+				
+		} else {
+			$response = false;
+		}
+		echo json_encode($response);
+	}
+    
+    
+     function admin_savehabtmfld(){
+  
+		$this->autoRender = false;
+		$this->Pobjectbehavior->id = $_POST['pk'];
+        $tr = substr($_POST['name'],0,strpos($_POST['name'],'__'));
+		$ids = $this->Pobjectbehavior->$tr->find('list', array('fields'=>array('id'), 'conditions'=>array(str_replace('__','.',$_POST['name'])=>$_POST['value'])));
+		$this->data = array('Pobjectbehavior'=>array('id'=>$_POST['pk']),substr($_POST['name'],0,strpos($_POST['name'],'__'))=>array(substr($_POST['name'],0,strpos($_POST['name'],'__'))=>$ids));
+		
+		if($this->Pobjectbehavior->save($this->data)) {
+			$response = true;
+				
+		} else {
+			$response = false;
+		}
+		echo json_encode($response);
+	}
+    
+     function admin_deleteall() {
+		$this->autoRender = false;
+        
+  		$this->autoRender = false;
+		$arr = array();
+		foreach($this->data['Pobjectbehavior'] as $pobjectbehavior_id => $del){
+			if($del == 1 ){$arr[] = $pobjectbehavior_id;}
+		}
+		if($this->Pobjectbehavior->deleteAll(array('Pobjectbehavior.id'=>$arr))) {
+			$this->Session->setFlash(__('Deleted.', true));
+			$this->redirect(array('action' => 'editindex'));
+		
+		}else{
+			$this->Session->setFlash(__('Could not be deleted.', true));
+			$this->redirect(array('action' => 'editindex'));
+		}
+
+	}
+    
+  
+  
+    
+    function admin_editindexsavefld() {
+		$this->autoRender = false;
+		$this->Pobjectbehavior->id = $_POST['pk'];
+		
+		if($this->Pobjectbehavior->saveField($_POST['name'],$_POST['value'])) {
+			$response = true;	
+		} else {
+			$response = false;
+		}
+		echo json_encode($response);
+	}
+    
+  
+  
+    
+
+/**
+ * admin_view method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function admin_view($id = null) {
+		if (!$this->Pobjectbehavior->exists($id)) {
+			throw new NotFoundException(__d('croogo', 'Invalid pobjectbehavior'));
+		}
+		$options = array('conditions' => array('Pobjectbehavior.' . $this->Pobjectbehavior->primaryKey => $id));
+		$this->set('pobjectbehavior', $this->Pobjectbehavior->find('first', $options));
+	}
+
+
+
+/**
+ * admin_add method
+ *
+ * @return void
+ */
+	public function admin_add() {
+		if ($this->request->is('post')) {
+			$this->Pobjectbehavior->create();
+			if ($this->Pobjectbehavior->save($this->request->data)) {
+				$this->Session->setFlash(__d('croogo', 'The pobjectbehavior has been saved'), 'default', array('class' => 'success'));
+				$this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__d('croogo', 'The pobjectbehavior could not be saved. Please, try again.'), 'default', array('class' => 'error'));
+			}
+		}
+		$pobjects = $this->Pobjectbehavior->Pobject->find('list');
+		$this->set(compact('pobjects'));
+	}
+
+
+
+
+/**
+ * admin_edit method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function admin_edit($id = null) {
+		if (!$this->Pobjectbehavior->exists($id)) {
+			throw new NotFoundException(__d('croogo', 'Invalid pobjectbehavior'));
+		}
+		if ($this->request->is('post') || $this->request->is('put')) {
+			if ($this->Pobjectbehavior->save($this->request->data)) {
+				$this->Session->setFlash(__d('croogo', 'The pobjectbehavior has been saved'), 'default', array('class' => 'success'));
+				$this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__d('croogo', 'The pobjectbehavior could not be saved. Please, try again.'), 'default', array('class' => 'error'));
+			}
+		} else {
+			$options = array('conditions' => array('Pobjectbehavior.' . $this->Pobjectbehavior->primaryKey => $id));
+			$this->request->data = $this->Pobjectbehavior->find('first', $options);
+		}
+		$pobjects = $this->Pobjectbehavior->Pobject->find('list');
+		$this->set(compact('pobjects'));
+	}
+
+/**
+ * admin_delete method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $id
+ * @return void
+ */
+	public function admin_delete($id = null) {
+		$this->Pobjectbehavior->id = $id;
+		if (!$this->Pobjectbehavior->exists()) {
+			throw new NotFoundException(__d('croogo', 'Invalid pobjectbehavior'));
+		}
+		$this->request->onlyAllow('post', 'delete');
+		if ($this->Pobjectbehavior->delete()) {
+			$this->Session->setFlash(__d('croogo', 'Pobjectbehavior deleted'), 'default', array('class' => 'success'));
+			$this->redirect(array('action' => 'index'));
+		}
+		$this->Session->setFlash(__d('croogo', 'Pobjectbehavior was not deleted'), 'default', array('class' => 'error'));
+		$this->redirect(array('action' => 'index'));
+	}}

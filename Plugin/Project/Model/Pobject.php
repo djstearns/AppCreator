@@ -1,10 +1,30 @@
 <?php
+App::uses('ProjectAppModel', 'Project.Model');
+/**
+ * Pobject Model
+ *
+ * @property Project $Project
+ * @property Fld $Fld
+ * @property Pobjectbehavior $Pobjectbehavior
+ */
 class Pobject extends ProjectAppModel {
-	var $name = 'Pobject';
+
+/**
+ * Display field
+ *
+ * @var string
+ */
+	public $displayField = 'name';
+
+	public $actsas = array('Containable');
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
-	var $displayField = 'tablename';
-	
-	var $belongsTo = array(
+
+/**
+ * belongsTo associations
+ *
+ * @var array
+ */
+	public $belongsTo = array(
 		'Project' => array(
 			'className' => 'Project',
 			'foreignKey' => 'project_id',
@@ -14,23 +34,47 @@ class Pobject extends ProjectAppModel {
 		)
 	);
 
-	var $hasAndBelongsToMany = array(
+/**
+ * hasMany associations
+ *
+ * @var array
+ */
+	public $hasMany = array(
+		'Fld' => array(
+			'className' => 'Project.Fld',
+			'foreignKey' => 'pobject_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)
+	);
+
+
+/**
+ * hasAndBelongsToMany associations
+ *
+ * @var array
+ */
+	public $hasAndBelongsToMany = array(
 		'Pobjectbehavior' => array(
-			'className' => 'Pobjectbehavior',
+			'className' => 'Project.Pobjectbehavior',
 			'joinTable' => 'pobjects_pobjectbehaviors',
 			'foreignKey' => 'pobject_id',
 			'associationForeignKey' => 'pobjectbehavior_id',
-			'unique' => true,
+			'unique' => 'keepExisting',
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
 			'limit' => '',
 			'offset' => '',
 			'finderQuery' => '',
-			'deleteQuery' => '',
-			'insertQuery' => ''
 		)
 	);
 
 }
-?>

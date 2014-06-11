@@ -10,43 +10,13 @@ App::uses('ProjectAppModel', 'Project.Model');
 class Fld extends ProjectAppModel {
 
 /**
- * Validation rules
+ * Display field
  *
- * @var array
+ * @var string
  */
-	public $validate = array(
-		'pobject_id' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'name' => array(
-			'notEmpty' => array(
-				'rule' => array('notEmpty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'ftype_id' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-	);
+	public $displayField = 'name';
 
+	public $actsas = array('Containable');
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
 /**
@@ -56,14 +26,14 @@ class Fld extends ProjectAppModel {
  */
 	public $belongsTo = array(
 		'Pobject' => array(
-			'className' => 'Pobject',
+			'className' => 'Project.Pobject',
 			'foreignKey' => 'pobject_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
 		),
 		'Ftype' => array(
-			'className' => 'Ftype',
+			'className' => 'Project.Ftype',
 			'foreignKey' => 'ftype_id',
 			'conditions' => '',
 			'fields' => '',

@@ -5,7 +5,7 @@ class Fldbehavior extends ProjectAppModel {
 
 	var $hasAndBelongsToMany = array(
 		'Fld' => array(
-			'className' => 'Fld',
+			'className' => 'Project.Fld',
 			'joinTable' => 'flds_fldbehaviors',
 			'foreignKey' => 'fldbehavior_id',
 			'associationForeignKey' => 'fld_id',

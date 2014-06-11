@@ -8,9 +8,9 @@ App::uses('ProjectAppController', 'Project.Controller');
  */
 class FldsController extends ProjectAppController {
 
-    public function beforeFilter() {
+public function beforeFilter() {
 		parent::beforeFilter();
-		$this->Security->unlockedActions = array('editindexsavefld','admin_editindexsavefld','admin_add');
+		$this->Security->unlockedActions = array('editindexsavefld','admin_editindexsavefld','admin_savehabtmfld','savehabtmfld');
 		
 	}
 
@@ -61,11 +61,6 @@ class FldsController extends ProjectAppController {
 	}
   
   
-  
-  
-  
-    
-    
      function deleteall() {
 		$this->autoRender = false;
         
@@ -235,10 +230,40 @@ class FldsController extends ProjectAppController {
 	}
   
   
+     function savehabtmfld(){
   
-  
-  
+		$this->autoRender = false;
+		$this->Fld->id = $_POST['pk'];
+        $tr = substr($_POST['name'],0,strpos($_POST['name'],'__'));
+		$ids = $this->Fld->$tr->find('list', array('fields'=>array('id'), 'conditions'=>array(str_replace('__','.',$_POST['name'])=>$_POST['value'])));
+		$this->data = array('Fld'=>array('id'=>$_POST['pk']),substr($_POST['name'],0,strpos($_POST['name'],'__'))=>array(substr($_POST['name'],0,strpos($_POST['name'],'__'))=>$ids));
+		
+		if($this->Fld->save($this->data)) {
+			$response = true;
+				
+		} else {
+			$response = false;
+		}
+		echo json_encode($response);
+	}
     
+    
+     function admin_savehabtmfld(){
+  
+		$this->autoRender = false;
+		$this->Fld->id = $_POST['pk'];
+        $tr = substr($_POST['name'],0,strpos($_POST['name'],'__'));
+		$ids = $this->Fld->$tr->find('list', array('fields'=>array('id'), 'conditions'=>array(str_replace('__','.',$_POST['name'])=>$_POST['value'])));
+		$this->data = array('Fld'=>array('id'=>$_POST['pk']),substr($_POST['name'],0,strpos($_POST['name'],'__'))=>array(substr($_POST['name'],0,strpos($_POST['name'],'__'))=>$ids));
+		
+		if($this->Fld->save($this->data)) {
+			$response = true;
+				
+		} else {
+			$response = false;
+		}
+		echo json_encode($response);
+	}
     
      function admin_deleteall() {
 		$this->autoRender = false;
