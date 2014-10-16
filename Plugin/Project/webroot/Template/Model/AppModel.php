@@ -1,6 +1,7 @@
 <?php
 
 App::uses('AppModel', 'Model');
+App::Uses('SessionComponent', 'Controller/Console');
 
 /**
  * Example App Model
@@ -13,5 +14,9 @@ App::uses('AppModel', 'Model');
  * @link     http://www.croogo.org
  */
 class ExampleAppModel extends AppModel {
+	public function currentUser() {
+	  	$user = SessionComponent::read('Auth.User.id');
+	  return array('id'=>$user); # Return the complete user array
+	}
 
 }

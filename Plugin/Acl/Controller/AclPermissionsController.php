@@ -54,7 +54,7 @@ class AclPermissionsController extends AclAppController {
  * @param id integer aco id, when null, the root ACO is used
  * @return void
  */
-	public function admin_index($id = null, $level = null) {
+	public function admin_index($id = null, $level = null) {	
 		$this->set('title_for_layout', __d('croogo', 'Permissions'));
 
 		if ($id == null) {

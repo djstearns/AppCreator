@@ -36,7 +36,7 @@ $this->Html
 			<?php echo $this->Croogo->adminRowAction('', array('action' => 'view', $project['Project']['id']), array('icon' => 'eye-open')); ?>
 			<?php echo $this->Croogo->adminRowAction('', array('action' => 'edit', $project['Project']['id']), array('icon' => 'pencil')); ?>
 			<?php echo $this->Croogo->adminRowAction('', array('action' => 'delete', $project['Project']['id']), array('icon' => 'trash', 'escape' => true), __d('croogo', 'Are you sure you want to delete # %s?', $project['Project']['id'])); ?>
-			<?php echo $this->Croogo->adminRowAction('', array('action' => 'makeplugin', $project['Project']['id']), array('icon' => 'eye-open')); ?>
+			<?php echo $this->Croogo->adminRowAction('', array('action' => 'makeplugin', $project['Project']['id']), array('icon' => 'wrench')); ?>
 		
         </td>
 	</tr>

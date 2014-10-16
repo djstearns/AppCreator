@@ -36,6 +36,9 @@ echo $this->Form->create('Fld');
 				echo $this->Form->input('name', array(
 					'label' => 'Name',
 				));
+				echo $this->Form->input('display', array(
+					'label' => 'Display on mutliselect',
+				));
 				echo $this->Form->input('ftype_id', array(
 					'label' => 'Ftype Id',
 				));

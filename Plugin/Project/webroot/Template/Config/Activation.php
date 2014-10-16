@@ -29,6 +29,9 @@ class ExampleActivation {
  * @return void
  */
 	public function onActivation(&$controller) {
+		$controller->Croogo->addAco('Example/Example/admin_index'); // ProjectController::admin_index()
+		$controller->Croogo->addAco('Example/Example/index', array('registered', 'public')); // ProjectController::index()
+		
 		// ACL: set ACOs with permissions
 		App::uses('ConnectionManager', 'Model');
 		
@@ -43,12 +46,7 @@ class ExampleActivation {
 		
 		$thisshell = new Shell();
 		$thisshell->initialize();
-		$thisshell->dispatchShell('Bake model Kids --plugin Jamiesapp --theme croogo');
-		$thisshell->dispatchShell('Bake model Letters --plugin Jamiesapp --theme croogo');
-		$thisshell->dispatchShell('Bake controller Kids --plugin Jamiesapp --theme croogo --admin');
-		$thisshell->dispatchShell('Bake controller Letters --plugin Jamiesapp --theme croogo --admin');
-		$thisshell->dispatchShell('Bake view Kids --plugin Jamiesapp --theme croogo');
-		$thisshell->dispatchShell('Bake view Letters --plugin Jamiesapp --theme croogo');
+		insert_shell_here
 		
 		App::uses('CroogoPlugin', 'Extensions.Lib');
 		$CroogoPlugin = new CroogoPlugin();

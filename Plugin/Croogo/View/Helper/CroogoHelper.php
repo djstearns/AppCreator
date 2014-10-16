@@ -262,7 +262,7 @@ class CroogoHelper extends AppHelper {
 		if (!isset($this->adminTabs)) {
 			$this->adminTabs = false;
 		}
-
+		
 		$output = '';
 		$tabs = Configure::read('Admin.tabs.' . Inflector::camelize($this->request->params['controller']) . '/' . $this->request->params['action']);
 		if (is_array($tabs)) {

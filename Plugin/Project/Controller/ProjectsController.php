@@ -8,13 +8,15 @@ App::uses('ProjectAppController', 'Project.Controller');
  */
 class ProjectsController extends ProjectAppController {
 
+	
 	public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Security->unlockedActions = array('editindexsavefld','admin_editindexsavefld','makeplugin');
 		
 	}
 	
-		public $ignoretables = array(	"acos",
+	public $ignoretables = array(	
+									"acos",
 									"aros",
 									"aros_acos",
 									"blocks",
@@ -37,6 +39,7 @@ class ProjectsController extends ProjectAppController {
 									"types_vocabularies",
 									"users",
 									"vocabularies");
+									
 	public $helpers = array('Html', 'Form', 'FileManager.FileManager');
 
 /**
@@ -44,7 +47,10 @@ class ProjectsController extends ProjectAppController {
  *
  * @var array
  */
-	public $components = array('Paginator');
+	public $components = array(
+			'Paginator', 
+			'Project.Csv'
+	);
 
 /**
  * indexold method
@@ -55,7 +61,32 @@ class ProjectsController extends ProjectAppController {
 		$this->Project->recursive = 0;
 		$this->set('projects', $this->paginate());
 	}
-    
+	
+    function admin_import(){
+		$path = getcwd();
+		$this->set(compact('path'));
+
+		if (isset($this->request->data['Project']['file']['tmp_name']) &&
+			is_uploaded_file($this->request->data['Project']['file']['tmp_name'])) {
+			$destination = $path . '/'. $this->request->data['Project']['file']['name'];
+			move_uploaded_file($this->request->data['Project']['file']['tmp_name'], $destination);
+			$filename = getcwd().'/'.$this->request->data['Project']['file']['name'];
+			$this->data = $this->Csv->import($filename);
+			if($this->Project->saveAll($this->data)){
+				$this->Session->setFlash(__d('croogo', 'File imported successfully.'), 'default', array('class' => 'success'));
+			}
+		}
+	}
+	
+	function admin_export(){
+		$this->autoRender = false;
+		$data = $this->Project->find('all');
+		$filename = $this->plugin.'-'.$this->name.'Export'.date('Y-m-d-H-m-s').'.csv';
+		$urlname = $this->base.'/'.$filename;
+		$this->Csv->export(getcwd().'/'.$filename, $data);
+		$this->redirect('http://localhost/'.$urlname);
+	
+	}
     
  /**
  * index method
@@ -63,6 +94,7 @@ class ProjectsController extends ProjectAppController {
  * @return void
  */ 
           function index() {
+			  
             //$this->Project->recursive = 0;
             $this->set('projects', $this->paginate());
              //check if this is a relationship table
@@ -424,7 +456,15 @@ class ProjectsController extends ProjectAppController {
 		$menustr = '';
 		$downstr = '';
 		$sqlstring = "'";
+		$modelshellstr = ""; 
+		$contrshellstr = "";
+		$viewshellstr = "";
+		
 		foreach($projectToOutput as $i => $obj){
+			$modelshellstr .= "\$thisshell->dispatchShell('Bake model ".ucfirst($obj['Pobject']['name'])." --plugin ".$pluginname." --theme project -q');";
+			$contrshellstr .= "\$thisshell->dispatchShell('Bake controller ".ucfirst($obj['Pobject']['name'])." --plugin ".$pluginname." --theme project --admin -q');";
+			$viewshellstr  .= "\$thisshell->dispatchShell('Bake view ".ucfirst($obj['Pobject']['name'])." --plugin ".$pluginname." --theme project -q');";
+			
 			$sqlstring .= "CREATE TABLE IF NOT EXISTS ".$obj['Pobject']['name']." (";
 			$schemastring .= "public $".$obj['Pobject']['name']." = array(";
 			$string .= "'".$obj['Pobject']['name']."' => array(";
@@ -549,6 +589,7 @@ class ProjectsController extends ProjectAppController {
 		$str=str_replace("Example", $pluginname, $str);
 		$str=str_replace("example",$lcpluginname, $str);
 		$str=str_replace("sql_create", $sqlstring, $str);
+		$str=str_replace("insert_shell_here", $modelshellstr.$contrshellstr.$viewshellstr, $str);
 		file_put_contents($newpath.'/Config/'.$pluginname.'Activation.php', $str);
 		
 		//create migration
@@ -595,6 +636,15 @@ class ProjectsController extends ProjectAppController {
 		$str=str_replace("example", $lcpluginname, $str);
 		file_put_contents($newpath.'/Config/events.php', $str);
 		
+		//MOBILE
+		$str=file_get_contents($newpath.'/Controller/Controller.php');
+		$str=str_replace("lcPLUGIN", strtolower($lcpluginname), $str);
+		$str=str_replace("PLUGINNAME", $pluginname, $str);
+		$str=str_replace("HOST", $projectdata['Project']['host'], $str);
+		file_put_contents($newpath.'/Controller/Controller.php', $str);
+		rename($newpath.'/Controller/Controller.php', $newpath.'/Controller/'.$pluginname.'Controller.php');
+		
+		
 		//create bootstrap file: create menu above, create string for admin menu in field parse above, and create area array for fields with CKeditor.
 		//bootstrap file
 		
@@ -613,9 +663,7 @@ class ProjectsController extends ProjectAppController {
 		
 		file_put_contents($newpath.'/Config/bootstrap.php', $str.$adminmenustr);
 		
-		//create models, controllers, views
-		
-		
+		//$this->Session->setFlash(__d('croogo', 'The project was built. You may need to refresh the page to see it in your plugins.'), 'default', array('class' => 'success'));
 		
 		$this->redirect(array('plugin'=>'extensions', 'controller'=>'extensions_plugins'));
 	}

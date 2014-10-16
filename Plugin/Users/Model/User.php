@@ -221,5 +221,27 @@ class User extends UsersAppModel {
 		}
 		return true;
 	}
+	
+	//uickappv1
+	function hashPasswords($data) {
+        if (isset($data['User']['password'])) {
+            $data['User']['password'] = md5($data['User']['password']);
+            return $data;
+        }
+        return $data;
+    }
+	
+	public function authenticateMobile($token) {
+		return $this->find('first',
+			array(
+				'conditions' => array(
+					'token' => $token
+				)
+			)
+		);
+		
+		
+	}
+
 
 }

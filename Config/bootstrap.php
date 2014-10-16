@@ -14,7 +14,7 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright     Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @link          http://cakephp.org CakePHP(tm) Facebook
  * @package       cake
  * @subpackage    cake.app.config
  * @since         CakePHP(tm) v 0.10.8.2117
@@ -66,3 +66,4 @@ CakeLog::config('error', array(
 ));
 
 CakePlugin::load('Croogo', array('bootstrap' => true));
+CakePlugin::load('Facebook');

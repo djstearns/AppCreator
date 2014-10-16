@@ -1,0 +1,3 @@
+Project.id,Project.name,Project.description,Project.user_id,Project.host,Project.created,Project.modified,User.id,User.role_id,User.username,User.password,User.name,User.email,User.website,User.activation_key,User.image,User.bio,User.timezone,User.status,User.updated,User.created
+127,thedirectory,directory,1,,"2014-01-01 00:00:00","2014-01-01 16:44:00",1,1,admin1,6f986311cf415840a52765278aba48cdc281fef9,admin,admin@gmail.com,hello.com,d7cbac0cb2fae0f9b421dae1a4766e47,,,0,1,"2014-05-13 13:51:38","2014-05-13 02:08:20"
+190,test,test,1,,"0000-00-00 00:00:00","2014-07-20 16:44:00",1,1,admin1,6f986311cf415840a52765278aba48cdc281fef9,admin,admin@gmail.com,hello.com,d7cbac0cb2fae0f9b421dae1a4766e47,,,0,1,"2014-05-13 13:51:38","2014-05-13 02:08:20"

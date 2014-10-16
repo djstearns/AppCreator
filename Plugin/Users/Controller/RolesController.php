@@ -29,7 +29,7 @@ class RolesController extends UsersAppController {
  * @access public
  */
 	public $uses = array('Users.Role');
-
+	
 /**
  * Admin index
  *
@@ -38,7 +38,7 @@ class RolesController extends UsersAppController {
  */
 	public function admin_index() {
 		$this->set('title_for_layout', __d('croogo', 'Roles'));
-
+		//debugger::dump($this->Role);
 		$this->Role->recursive = 0;
 		$this->paginate['Role']['order'] = "Role.id ASC";
 		$this->set('roles', $this->paginate());

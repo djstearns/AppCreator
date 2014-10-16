@@ -1,54 +1,72 @@
 <div class="fldbehaviors view">
-<h2><?php  __('Fldbehavior');?></h2>
-	<dl><?php $i = 0; $class = ' class="altrow"';?>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Id'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $fldbehavior['Fldbehavior']['id']; ?>
+<h2><?php echo __('Fldbehavior'); ?></h2>
+	<dl>
+		<dt><?php echo __('Id'); ?></dt>
+		<dd>
+			<?php echo h($fldbehavior['Fldbehavior']['id']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Name'); ?></dt>
+		<dd>
+			<?php echo h($fldbehavior['Fldbehavior']['name']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Created'); ?></dt>
+		<dd>
+			<?php echo h($fldbehavior['Fldbehavior']['created']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Modified'); ?></dt>
+		<dd>
+			<?php echo h($fldbehavior['Fldbehavior']['modified']); ?>
 			&nbsp;
 		</dd>
 	</dl>
 </div>
 <div class="actions">
-	<h3><?php __('Actions'); ?></h3>
+	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Edit Fldbehavior', true), array('action' => 'edit', $fldbehavior['Fldbehavior']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('Delete Fldbehavior', true), array('action' => 'delete', $fldbehavior['Fldbehavior']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $fldbehavior['Fldbehavior']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Fldbehaviors', true), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Fldbehavior', true), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Flds', true), array('controller' => 'flds', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Fld', true), array('controller' => 'flds', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('Edit Fldbehavior'), array('action' => 'edit', $fldbehavior['Fldbehavior']['id'])); ?> </li>
+		<li><?php echo $this->Form->postLink(__('Delete Fldbehavior'), array('action' => 'delete', $fldbehavior['Fldbehavior']['id']), null, __('Are you sure you want to delete # %s?', $fldbehavior['Fldbehavior']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('List Fldbehaviors'), array('action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Fldbehavior'), array('action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Flds'), array('controller' => 'flds', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Fld'), array('controller' => 'flds', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
 <div class="related">
-	<h3><?php __('Related Flds');?></h3>
-	<?php if (!empty($fldbehavior['Fld'])):?>
+	<h3><?php echo __('Related Flds'); ?></h3>
+	<?php if (!empty($fldbehavior['Fld'])): ?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
-		<th><?php __('Id'); ?></th>
-		<th><?php __('Pobject Id'); ?></th>
-		<th><?php __('Name'); ?></th>
-		<th><?php __('Ftype Id'); ?></th>
-		<th><?php __('Length'); ?></th>
-		<th class="actions"><?php __('Actions');?></th>
+		<th><?php echo __('Id'); ?></th>
+		<th><?php echo __('Pobject Id'); ?></th>
+		<th><?php echo __('Display'); ?></th>
+		<th><?php echo __('Name'); ?></th>
+		<th><?php echo __('Ftype Id'); ?></th>
+		<th><?php echo __('Defaultvalue'); ?></th>
+		<th><?php echo __('Length'); ?></th>
+		<th><?php echo __('Nullable'); ?></th>
+		<th><?php echo __('Created'); ?></th>
+		<th><?php echo __('Modified'); ?></th>
+		<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
-	<?php
-		$i = 0;
-		foreach ($fldbehavior['Fld'] as $fld):
-			$class = null;
-			if ($i++ % 2 == 0) {
-				$class = ' class="altrow"';
-			}
-		?>
-		<tr<?php echo $class;?>>
-			<td><?php echo $fld['id'];?></td>
-			<td><?php echo $fld['pobject_id'];?></td>
-			<td><?php echo $fld['name'];?></td>
-			<td><?php echo $fld['ftype_id'];?></td>
-			<td><?php echo $fld['length'];?></td>
+	<?php foreach ($fldbehavior['Fld'] as $fld): ?>
+		<tr>
+			<td><?php echo $fld['id']; ?></td>
+			<td><?php echo $fld['pobject_id']; ?></td>
+			<td><?php echo $fld['display']; ?></td>
+			<td><?php echo $fld['name']; ?></td>
+			<td><?php echo $fld['ftype_id']; ?></td>
+			<td><?php echo $fld['defaultvalue']; ?></td>
+			<td><?php echo $fld['length']; ?></td>
+			<td><?php echo $fld['nullable']; ?></td>
+			<td><?php echo $fld['created']; ?></td>
+			<td><?php echo $fld['modified']; ?></td>
 			<td class="actions">
-				<?php echo $this->Html->link(__('View', true), array('controller' => 'flds', 'action' => 'view', $fld['id'])); ?>
-				<?php echo $this->Html->link(__('Edit', true), array('controller' => 'flds', 'action' => 'edit', $fld['id'])); ?>
-				<?php echo $this->Html->link(__('Delete', true), array('controller' => 'flds', 'action' => 'delete', $fld['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $fld['id'])); ?>
+				<?php echo $this->Html->link(__('View'), array('controller' => 'flds', 'action' => 'view', $fld['id'])); ?>
+				<?php echo $this->Html->link(__('Edit'), array('controller' => 'flds', 'action' => 'edit', $fld['id'])); ?>
+				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'flds', 'action' => 'delete', $fld['id']), null, __('Are you sure you want to delete # %s?', $fld['id'])); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
@@ -57,7 +75,7 @@
 
 	<div class="actions">
 		<ul>
-			<li><?php echo $this->Html->link(__('New Fld', true), array('controller' => 'flds', 'action' => 'add'));?> </li>
+			<li><?php echo $this->Html->link(__('New Fld'), array('controller' => 'flds', 'action' => 'add')); ?> </li>
 		</ul>
 	</div>
 </div>

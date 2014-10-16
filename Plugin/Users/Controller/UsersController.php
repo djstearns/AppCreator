@@ -22,6 +22,7 @@ class UsersController extends UsersAppController {
  * @access public
  */
 	public $components = array(
+		'RequestHandler',
 		'Search.Prg' => array(
 			'presetForm' => array(
 				'paramType' => 'querystring',
@@ -32,6 +33,17 @@ class UsersController extends UsersAppController {
 			),
 		),
 	);
+	
+	public function beforeFilter() {
+		parent::beforeFilter();
+		$this->Security->unlockedActions = array('loginjson');
+		$this->Auth->allow('loginjson');
+		
+			parent::beforeFilter();
+		
+		
+		
+	}
 
 /**
  * Preset Variables Search
@@ -105,6 +117,7 @@ class UsersController extends UsersAppController {
  * $searchField : Identify fields for search
  */
 	public function admin_index() {
+		//debugger::dump($this->User->Role);
 		$this->set('title_for_layout', __d('croogo', 'Users'));
 		$this->Prg->commonProcess();
 		$searchFields = array('role_id', 'name');
@@ -536,6 +549,21 @@ class UsersController extends UsersAppController {
 			}
 		}
 	}
+	
+	public function client_login() {
+		$this->set('title_for_layout', __d('croogo', 'Log in'));
+		if ($this->request->is('post')) {
+			Croogo::dispatchEvent('Controller.Users.beforeLogin', $this);
+			if ($this->Auth->login()) {
+				Croogo::dispatchEvent('Controller.Users.loginSuccessful', $this);
+				$this->redirect($this->Auth->redirect());
+			} else {
+				Croogo::dispatchEvent('Controller.Users.loginFailure', $this);
+				$this->Session->setFlash($this->Auth->authError, 'default', array('class' => 'error'), 'auth');
+				$this->redirect($this->Auth->loginAction);
+			}
+		}
+	}
 
 /**
  * Logout
@@ -574,5 +602,49 @@ class UsersController extends UsersAppController {
 	protected function _getSenderEmail() {
 		return 'croogo@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
 	}
+	
+	public function loginjson() {
+        
+			$this->autoRender = false;
+			$post['username'] = 'admin1';//$_POST['username'];
+			$post['password'] = '89885f1b0d98cefde644dd1f3fb488dc8f7cb86b';//$_POST['password'];
+			
+			//$post['android_registration_id'] = $this->request->data['reg_id'];
+			//$data['hash'] = $this->Auth->password($post['password']);
+			$check = $this->User->find('first',
+				array(
+					'conditions' => array(
+						'username' => $post['username'],
+						'password' => $post['password']
+					)
+				)
+			);
+			$save = array();
+			if($check) {
+				$save['id'] = $check['User']['id'];
+				$save['token'] = $this->Auth->password($post['username'].date('dmY'));
+				//$save['android_registration_id'] = $this->request->data['reg_id'];
+				$save['last_mobile_login'] = date('Y-m-d H:i:s');
+				if($this->User->save($save)) {
+					$response = array('logged' => true, 'token'=> $save['token'], 'email' => $check['User']['email'], 'username'=>$check['User']['username'], 'id'=>$check['User']['id']);
+					
+				} else {
+					 $response = array(
+						'logged' => false,
+						'message' => 'Invalid Username and/or Password'
+					);
+				}
+			} else {
+				$response = array(
+					'logged' => false,
+					'message' => 'Invalid Username and/or Password'
+				);
+			}
+			echo json_encode($response);
+		//}
+	
+    }
+	
+	
 
 }

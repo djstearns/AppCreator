@@ -6,8 +6,14 @@
  * @link http://www.croogo.org
  */
 ?>
-<!DOCTYPE html>
-<html lang="en">
+
+<?php 
+		if($this->Facebook){
+			echo $this->Facebook->html();
+		}else{
+			echo '<!DOCTYPE html><html lang="en">';
+		}
+?>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><?php echo $title_for_layout; ?> &raquo; <?php echo Configure::read('Site.title'); ?></title>
@@ -77,6 +83,7 @@
             <div class="span8">
             <?php
                 echo $this->Layout->sessionFlash();
+				
                 echo $content_for_layout;
             ?>
             </div>
@@ -102,4 +109,7 @@
         </div>
     </div>
     </body>
+    <?php if(isset($this->Facebook)){
+		echo $this->Facebook->init();
+	}?>
 </html>

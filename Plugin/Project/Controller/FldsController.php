@@ -86,7 +86,9 @@ public function beforeFilter() {
     function editindexsavefld() {
 		$this->autoRender = false;
 		$this->Fld->id = $_POST['pk'];
-		
+		if(isset($_POST['value'][0])){
+			$_POST['value'] = $_POST['value'][0];
+		}	
 		if($this->Fld->saveField($_POST['name'],$_POST['value'])) {
 			$response = true;	
 		} else {
@@ -289,13 +291,26 @@ public function beforeFilter() {
     
     function admin_editindexsavefld() {
 		$this->autoRender = false;
-		$this->Fld->id = $_POST['pk'];
-		
-		if($this->Fld->saveField($_POST['name'],$_POST['value'])) {
-			$response = true;	
-		} else {
-			$response = false;
+	
+		if(isset($_POST['value'])){
+			$this->Fld->id = $_POST['pk'];
+			if($this->Fld->saveField($_POST['name'],$_POST['value'])) {
+				$response = true;	
+			} else {
+				$response = false;
+			}
 		}
+		
+		if(isset($_POST['check'])){
+			$_POST['value'] = $_POST['check'];
+			$this->Fld->id = $_POST['pk'];
+			if($this->Fld->saveField($_POST['name'],$_POST['value'])) {
+				$response = intval($_POST['check']);	
+			} else {
+				$response = false;
+			}
+		}
+	
 		echo json_encode($response);
 	}
     

@@ -92,6 +92,7 @@ class AclCachedAuthorize extends BaseAuthorize {
  */
 	public function authorize($user, CakeRequest $request) {
 		// Admin role is allowed to perform all actions, bypassing ACL
+
 		if ($this->_isAdmin($user)) {
 			return true;
 		}
@@ -100,7 +101,7 @@ class AclCachedAuthorize extends BaseAuthorize {
 		$Acl = $this->_Collection->load('Acl');
 		list($plugin, $userModel) = pluginSplit($this->settings['userModel']);
 		$action = $this->action($request);
-
+		
 		$cacheName = 'permissions_' . strval($user['id']);
 		if (($permissions = Cache::read($cacheName, 'permissions')) === false) {
 			$permissions = array();

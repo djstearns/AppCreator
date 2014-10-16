@@ -15,7 +15,9 @@ $this->Html
 	<th></th>	
 		<th><?php echo $this->Paginator->sort('id'); ?></th>
 		<th><?php echo $this->Paginator->sort('pobject_id'); ?></th>
+        <th><?php echo $this->Paginator->sort('display'); ?></th>
 		<th><?php echo $this->Paginator->sort('name'); ?></th>
+        
 		<th><?php echo $this->Paginator->sort('ftype_id'); ?></th>
 		<th><?php echo $this->Paginator->sort('length'); ?></th>
 		<th><?php echo $this->Paginator->sort('created'); ?></th>
@@ -38,6 +40,7 @@ $this->Html
 	</td>
 		<td><?php echo $this->Html->link($fld['Fld']['id'], '#', array('id'=>'id','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
 		<td><?php echo $this->Html->link($fld['Pobject']['name'], '#', array('id'=>'pobject_id','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'select2', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click dclass-Pobject', 'style'=>'display: inline;')); ?></td>
+        <td><?php echo $this->Html->image(($fld['Fld']['display'] == 1 ? '/project/img/icons/tick.png':'/project/img/icons/cross.png'), array('value'=>($fld['Fld']['display'] == 1 ? 0:1), 'id'=>'display','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'checklist', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click dclass-checkbox1', 'style'=>'display: inline;')); ?></td>
 		<td><?php echo $this->Html->link($fld['Fld']['name'], '#', array('id'=>'name','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
 		<td><?php echo $this->Html->link($fld['Ftype']['name'], '#', array('id'=>'ftype_id','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'select2', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click dclass-Ftype', 'style'=>'display: inline;')); ?></td>
 		<td><?php echo $this->Html->link($fld['Fld']['length'], '#', array('id'=>'length','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
@@ -67,6 +70,7 @@ $('.mclass-Fldbehavior').editable({
 						inputclass: 'input-large',
 							select2: {
 								tags: <?php echo $fldbehaviorstr; ?>,
+								placeholder: 'Select Fldbehaviors',
 								tokenSeparators: [',', ' ']
 							}
 							});
@@ -96,5 +100,33 @@ var Pobjectslist = [];
 					allowClear: true
 				} 
 			});
+			$('.dclass-checkbox1').click( function (e){
+				e.preventDefault();
+				var linkitem = $(this);
+				//$(this).attr("src","");
+				var id = $(this).attr('id');
+				var value = $(this).attr('value');
+				var pk = $(this).attr('data-pk');
+				$.ajax({
+				  type: "POST",
+				  url: <?php echo "'".$this->here."/editindexsavefld'"; ?>,
+				  data: {"name":id,"check":value,"pk":pk},
+				  success: function(data, config) {
+					if(data == '1'){
+						$(linkitem).attr("src", "<?php echo $this->base ?>/project/img/icons/tick.png");
+						$(linkitem).attr("value", 0);
+					}else{
+						$(linkitem).attr("src", "<?php echo $this->base ?>/project/img/icons/cross.png");
+						$(linkitem).attr("value", 1);
+					}
+				  }
+				  
+				});
+				 return false;
+			});
+			
+
+			
+
  
 </script>

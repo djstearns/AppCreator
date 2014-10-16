@@ -14,7 +14,8 @@ class Project extends ProjectAppModel {
  * @var string
  */
 	public $displayField = 'name';
-
+	public $actsAs = array( 'AuditLog.Auditable' );
+       
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 

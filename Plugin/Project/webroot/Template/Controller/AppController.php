@@ -13,5 +13,6 @@ App::uses('AppController', 'Controller');
  * @link     http://www.croogo.org
  */
 class ExampleAppController extends AppController {
+	
 
 }

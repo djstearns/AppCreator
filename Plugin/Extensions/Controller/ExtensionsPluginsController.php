@@ -139,7 +139,7 @@ class ExtensionsPluginsController extends ExtensionsAppController {
 			$this->redirect(array('action' => 'index'));
 		}
 		
-
+		
 		if ($this->_CroogoPlugin->isActive($plugin)) {
 			$result = $this->_CroogoPlugin->deactivate($plugin);
 			if ($result === true) {

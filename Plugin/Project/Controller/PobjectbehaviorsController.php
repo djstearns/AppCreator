@@ -20,16 +20,6 @@ public function beforeFilter() {
  * @var array
  */
 	public $components = array('Paginator');
-
-/**
- * indexold method
- *
- * @return void
- */
-	public function indexOLD() {
-		$this->Pobjectbehavior->recursive = 0;
-		$this->set('pobjectbehaviors', $this->paginate());
-	}
     
     
  /**
@@ -381,4 +371,5 @@ public function beforeFilter() {
 		}
 		$this->Session->setFlash(__d('croogo', 'Pobjectbehavior was not deleted'), 'default', array('class' => 'error'));
 		$this->redirect(array('action' => 'index'));
-	}}
+	}
+}

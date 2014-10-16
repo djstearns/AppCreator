@@ -40,6 +40,7 @@
 					<?php
 						echo $this->Layout->sessionFlash();
 						echo $this->fetch('content');
+					
 					?>
 					</div>
 				</div>

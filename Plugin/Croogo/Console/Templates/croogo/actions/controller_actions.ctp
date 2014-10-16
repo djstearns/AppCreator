@@ -29,6 +29,101 @@
 	}
     
     
+function mobileindex() {
+		$this-><?php echo $currentModelName ?>->recursive = -1;
+		$this->autoRender = false;
+		$check = $this-><?php echo $currentModelName ?>->find('all', array('limit'=>200));
+		$save = array();
+		if($check) {
+			
+			$response = $check;
+				
+		} else {
+			$response = array(
+				'logged' => false,
+				'message' => 'Invalid user'
+			);
+		}
+		echo json_encode($response);
+	}
+    
+    function mobileadd() {
+		$this->autoRender = false;
+		$this->data['<?php echo $currentModelName ?>']=$_POST;
+		$this-><?php echo $currentModelName ?>->create();
+		if ($this-><?php echo $currentModelName ?>->save($this->data)) {
+			$check = array(
+			'logged' => false,
+			'message' => 'Saved!',
+			'id'=>$this-><?php echo $currentModelName ?>->getLastInsertId()
+			);	
+		} else {
+			$this->Session->setFlash(__('The <?php echo $currentModelName ?> could not be saved. Please, try again.', true));
+		}
+		if($check) {
+			
+			$response = $check;
+				
+		} else {
+			$response = array(
+				'logged' => false,
+				'message' => 'Invalid user'
+			);
+		}
+		echo json_encode($response);
+	}
+    
+     function mobilesave() {
+		$this->autoRender = false;
+        $this-><?php echo $currentModelName ?>->id=$_POST['id'];
+		$this->data['<?php echo $currentModelName ?>']=$_POST;
+		if ($this-><?php echo $currentModelName ?>->save($this->data)) {
+			$check = array(
+			'logged' => false,
+			'message' => 'Saved!',
+			);	
+		} else {
+			$this->Session->setFlash(__('The <?php echo $currentModelName ?> could not be saved. Please, try again.', true));
+		}
+		if($check) {
+			
+			$response = $check;
+				
+		} else {
+			$response = array(
+				'logged' => false,
+				'message' => 'Invalid <?php echo $currentModelName ?>'
+			);
+		}
+		echo json_encode($response);
+	}
+    
+    function mobiledelete($id = null) {
+		if (!$id) {
+			$response = array(
+						'logged' => false,
+						'message' => '<?php echo $currentModelName ?> did not exist remotely!'
+					);
+			
+		}
+		if ($this-><?php echo $currentModelName ?>->delete($id)) {
+			$response = array(
+						'logged' => false,
+						'message' => '<?php echo $currentModelName ?> deleted!'
+					);
+					
+		}else{
+			$response = array(
+						'logged' => false,
+						'id'=>$id,
+						'message' => '<?php echo $currentModelName ?> not deleted!'
+					);
+		}
+					
+		echo json_encode($response);
+	}    
+    
+    
  /**
  * <?php echo $admin ?>index method
  *

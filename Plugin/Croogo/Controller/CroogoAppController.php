@@ -1,6 +1,7 @@
 <?php
 
 App::uses('Controller', 'Controller');
+App::uses('FB', 'Facebook.Lib');
 
 /**
  * Croogo App Controller
@@ -27,8 +28,19 @@ class CroogoAppController extends Controller {
     	),
 		'Acl',
 		'Auth',
+		
+		'Auth'=> array(
+                'authenticate' => array(
+                    'Form' => array(
+                        'fields' => array('username' => 'email')
+                    )
+                ),
+                'authorize' => 'Controller'
+            ),
+			
 		'Session',
 		'RequestHandler',
+		'Facebook.Connect' => array('plugin'=>'Users', 'model' => 'User')
 	);
 
 /**
@@ -46,6 +58,8 @@ class CroogoAppController extends Controller {
 		'Time',
 		'Croogo.Layout',
 		'Custom',
+		'Facebook.Facebook'
+		
 	);
 
 /**
@@ -132,6 +146,27 @@ class CroogoAppController extends Controller {
  */
 	public function beforeFilter() {
 		parent::beforeFilter();
+		
+		if ($this->RequestHandler->ext == 'json' && $this->action !='login')
+		{
+			$this->RequestHandler->setContent('json', 'application/json');
+			//Prevent debug output that'll corrupt your json data
+			
+			if(isset($_POST['token'])){
+				
+				$this->loadModel('Users.User');
+				$token = $_POST['token'];
+				$mobileuser = $this->User->authenticateMobile($token);
+				
+				$this->Auth->login($mobileuser['User']);
+			
+				
+			}
+		}
+		//end quickappv1
+
+		
+		
 		$aclFilterComponent = Configure::read('Site.acl_plugin') . 'Filter';
 		if (empty($this->{$aclFilterComponent})) {
 			throw new MissingComponentException(array('class' => $aclFilterComponent));
@@ -141,21 +176,42 @@ class CroogoAppController extends Controller {
 		$this->Security->blackHoleCallback = 'securityError';
 		$this->Security->requirePost('admin_delete');
 
+		debugger::dump(Configure::read('Routing.prefixes'));
+	
+
 		if (isset($this->request->params['admin'])) {
 			$this->layout = 'admin';
+		}
+		debugger::dump($this->request->params);
+		if (isset($this->request->params['client'])) {
+			$this->layout = 'client';
 		}
 
 		if ($this->RequestHandler->isAjax()) {
 			$this->layout = 'ajax';
 		}
-
+		
 		if (Configure::read('Site.theme') && !isset($this->request->params['admin'])) {
 			$this->theme = Configure::read('Site.theme');
 		} elseif (Configure::read('Site.admin_theme') && isset($this->request->params['admin'])) {
 			$this->theme = Configure::read('Site.admin_theme');
 		}
+		
+		if (Configure::read('Site.theme') && !isset($this->request->params['admin'])) {
+			$this->theme = Configure::read('Site.theme');
+		} elseif (Configure::read('Site.client_theme') && isset($this->request->params['admin'])) {
+			$this->theme = Configure::read('Site.client_theme');
+		}
 
 		if (!isset($this->request->params['admin']) &&
+			Configure::read('Site.status') == 0) {
+			$this->layout = 'maintenance';
+			$this->response->statusCode(503);
+			$this->set('title_for_layout', __d('croogo', 'Site down for maintenance'));
+			$this->render('../Elements/blank');
+		}
+		
+		if (!isset($this->request->params['client']) &&
 			Configure::read('Site.status') == 0) {
 			$this->layout = 'maintenance';
 			$this->response->statusCode(503);
@@ -245,6 +301,7 @@ class CroogoAppController extends Controller {
  * @see Controller::beforeRender()
  */
 	public function beforeRender() {
+		
 		if (!$this->usePaginationCache) {
 			return;
 		}
@@ -252,5 +309,27 @@ class CroogoAppController extends Controller {
 			$this->helpers[] = 'Paginator';
 		}
 	}
+	
+	function beforeFacebookSave(){
+		$email = $this->Connect->user('email');
+		$this->Connect->authUser['User']['email'] = $email;
+		$this->Connect->authUser['User']['username'] = $email;
+		$this->Connect->authUser['User']['name'] = $this->Connect->user('name');
+		$this->Connect->authUser['User']['role_id'] = 2;
+		$this->Connect->authUser['User']['status'] = 1;
+		
+		return true; //Must return true or will not save.
+	}
+	
+	function beforeFacebookLogin($user){
+		//Logic to happen before a facebook login
+	}
+	
+	function afterFacebookLogin(){
+		//Logic to happen after successful facebook login.
+		$this->redirect(array('plugin'=>'users','controller'=>'users', 'action'=>'index'));
+	}
+	
+	
 
 }
