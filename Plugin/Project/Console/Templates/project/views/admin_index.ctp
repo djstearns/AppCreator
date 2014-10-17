@@ -220,7 +220,6 @@ if (!empty($associations['hasAndBelongsToMany'])) {
 			}
 			
 		}
-
 if (!empty($associations['belongsTo'])) {
 			foreach ($associations['belongsTo'] as $alias => $details) {
 			/*	
@@ -238,10 +237,11 @@ if (!empty($associations['belongsTo'])) {
 				} 
 			});\n ";
 			*/
+			
 			echo "//fix me below!
 			";
 			echo "var {$alias}slist = [];
-			$.each(<?php echo json_encode(\$".strtolower($alias)."s); ?>, function(k, v) {
+			$.each(<?php echo json_encode(\$".$details['controller']."); ?>, function(k, v) {
 				{$alias}slist.push({id: k, text: v});
 			}); 
 			

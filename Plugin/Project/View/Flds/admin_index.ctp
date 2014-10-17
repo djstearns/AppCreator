@@ -17,7 +17,7 @@ $this->Html
 		<th><?php echo $this->Paginator->sort('pobject_id'); ?></th>
         <th><?php echo $this->Paginator->sort('display'); ?></th>
 		<th><?php echo $this->Paginator->sort('name'); ?></th>
-        
+        <th><?php echo $this->Paginator->sort('objectlink'); ?></th>
 		<th><?php echo $this->Paginator->sort('ftype_id'); ?></th>
 		<th><?php echo $this->Paginator->sort('length'); ?></th>
 		<th><?php echo $this->Paginator->sort('created'); ?></th>
@@ -25,7 +25,7 @@ $this->Html
 		
 				  <?php $i = 0;
  $arr = array(); 
-				 foreach($flddata[$i-1]['Fldbehavior'] as $Fldbehavior){ $arr[] = $Fldbehavior['name']; }
+				 foreach($flddata[$i]['Fldbehavior'] as $Fldbehavior){ $arr[] = $Fldbehavior['name']; }
 					$str = implode(',',$arr); 
 					echo '<th>Fldbehavior</th>'
  ?>
@@ -42,6 +42,7 @@ $this->Html
 		<td><?php echo $this->Html->link($fld['Pobject']['name'], '#', array('id'=>'pobject_id','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'select2', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click dclass-Pobject', 'style'=>'display: inline;')); ?></td>
         <td><?php echo $this->Html->image(($fld['Fld']['display'] == 1 ? '/project/img/icons/tick.png':'/project/img/icons/cross.png'), array('value'=>($fld['Fld']['display'] == 1 ? 0:1), 'id'=>'display','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'checklist', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click dclass-checkbox1', 'style'=>'display: inline;')); ?></td>
 		<td><?php echo $this->Html->link($fld['Fld']['name'], '#', array('id'=>'name','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
+        <td><?php echo $this->Html->link($fld['Objectlink']['name'], '#', array('id'=>'objectlink','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'select2', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click dclass-Pobject', 'style'=>'display: inline;')); ?></td>
 		<td><?php echo $this->Html->link($fld['Ftype']['name'], '#', array('id'=>'ftype_id','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'select2', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click dclass-Ftype', 'style'=>'display: inline;')); ?></td>
 		<td><?php echo $this->Html->link($fld['Fld']['length'], '#', array('id'=>'length','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
 		<td><?php echo $this->Html->link($fld['Fld']['created'], '#', array('id'=>'created','data-url'=>$this->here.'/editindexsavefld', 'data-type'=>'text', 'data-pk'=> $fld['Fld']['id'], 'class'=>'editable editable-click jclass', 'style'=>'display: inline;')); ?></td>
@@ -75,7 +76,11 @@ $('.mclass-Fldbehavior').editable({
 							}
 							});
 var Pobjectslist = [];
+			Pobjectslist.push({id:-5, text:'users'});
+			Pobjectslist.push({id:-4, text:'attachments'});
+			
 			$.each(<?php echo json_encode($pobjects); ?>, function(k, v) {
+				
 				Pobjectslist.push({id: k, text: v});
 			}); 
 			
@@ -87,6 +92,7 @@ var Pobjectslist = [];
 					allowClear: true
 				} 
 			});
+					
  var Ftypeslist = [];
 			$.each(<?php echo json_encode($ftypes); ?>, function(k, v) {
 				Ftypeslist.push({id: k, text: v});

@@ -32,6 +32,13 @@ class Fld extends ProjectAppModel {
 			'fields' => '',
 			'order' => ''
 		),
+		'Objectlink' => array(
+			'className' => 'Project.Pobject',
+			'foreignKey' => 'objectlink',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
 		'Ftype' => array(
 			'className' => 'Project.Ftype',
 			'foreignKey' => 'ftype_id',

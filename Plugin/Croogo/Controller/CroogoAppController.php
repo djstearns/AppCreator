@@ -176,13 +176,13 @@ class CroogoAppController extends Controller {
 		$this->Security->blackHoleCallback = 'securityError';
 		$this->Security->requirePost('admin_delete');
 
-		debugger::dump(Configure::read('Routing.prefixes'));
+		//debugger::dump(Configure::read('Routing.prefixes'));
 	
 
 		if (isset($this->request->params['admin'])) {
 			$this->layout = 'admin';
 		}
-		debugger::dump($this->request->params);
+		//debugger::dump($this->request->params);
 		if (isset($this->request->params['client'])) {
 			$this->layout = 'client';
 		}

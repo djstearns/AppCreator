@@ -1,52 +1,39 @@
 <?php
-$this->viewVars['title_for_layout'] = __d('croogo', 'Flds');
+$this->viewVars['title_for_layout'] = __d('croogo', 'Fldbehaviors');
 $this->extend('/Common/admin_edit');
 
 $this->Html
 	->addCrumb('', '/admin', array('icon' => 'home'))
-	->addCrumb(__d('croogo', 'Flds'), array('action' => 'index'));
+	->addCrumb(__d('croogo', 'Fldbehaviors'), array('action' => 'index'));
 
 if ($this->action == 'admin_edit') {
-	$this->Html->addCrumb($this->data['Fld']['name'], '/' . $this->request->url);
-	$this->viewVars['title_for_layout'] = 'Flds: ' . $this->data['Fld']['name'];
+	$this->Html->addCrumb($this->data['Fldbehavior']['name'], '/' . $this->request->url);
+	$this->viewVars['title_for_layout'] = 'Fldbehaviors: ' . $this->data['Fldbehavior']['name'];
 } else {
 	$this->Html->addCrumb(__d('croogo', 'Add'), '/' . $this->request->url);
 }
 
-echo $this->Form->create('Fld');
+echo $this->Form->create('Fldbehavior');
 
 ?>
-<div class="flds row-fluid">
+<div class="fldbehaviors row-fluid">
 	<div class="span8">
 		<ul class="nav nav-tabs">
 		<?php
-			echo $this->Croogo->adminTab(__d('croogo', 'Fld'), '#fld');
+			echo $this->Croogo->adminTab(__d('croogo', 'Fldbehavior'), '#fldbehavior');
 			echo $this->Croogo->adminTabs();
 		?>
 		</ul>
 
 		<div class="tab-content">
-			<div id='fld' class="tab-pane">
+			<div id='fldbehavior' class="tab-pane">
 			<?php
 				echo $this->Form->input('id');
 				$this->Form->inputDefaults(array('label' => false, 'class' => 'span10'));
-				echo $this->Form->input('pobject_id', array(
-					'label' => 'Pobject Id',
-				));
 				echo $this->Form->input('name', array(
 					'label' => 'Name',
 				));
-				echo $this->Form->input('ftype_id', array(
-					'label' => 'Ftype Id',
-				));
-				echo $this->Form->input('objectlink', array(
-					'label' => 'Related Object',
-					'options' => $pobjects
-				));
-				echo $this->Form->input('length', array(
-					'label' => 'Length',
-				));
-				echo $this->Form->input('Fldbehavior');
+				echo $this->Form->input('Fld');
 			?>
 			</div>
 			<?php echo $this->Croogo->adminTabs(); ?>

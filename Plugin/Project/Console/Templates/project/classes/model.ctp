@@ -136,40 +136,115 @@ foreach ($associations as $assoc):
 	endif;
 endforeach;
 
+//add associations for objectlinked fields
+//get the fields.
+echo "/*";
+$fld = $flds->find('all', array('conditions'=>array('OR'=>array('Not'=>array('Fld.objectlink'=>''), 'Not'=>array('Fld.objectlink'=> NULL), 'Not'=>array('Fld.objectlink'=> 0)))));
+$pobjs = $pobjects->find('list');
+$i = 0;
+$out = '';
+foreach($fld as $field){
+	
+	$objname = Inflector::classify($pobjs[$field['Fld']['pobject_id']]);
+	
+	if(trim($name) == trim($objname)){
+		//print_r($field['Fld']);
+		//special cases for other plugins
+		switch($field['Fld']['objectlink']){
+			
+			//users
+			case -5:
+			
+			$associations['belongsTo'][] = array('alias' =>ucfirst($field['Fld']['name']), 'className'=>'Users.User', 'foreignKey'=>$field['Fld']['name']);
+			/*
+			$out = "\n\t\t'".ucfirst($field['Fld']['name'])."' => array(\n";
+			$out .= "\t\t\t'className' => 'Users.User',\n";
+			$out .= "\t\t\t'foreignKey' => '{$field['Fld']['name']}',\n";
+			$out .= "\t\t\t'conditions' => '',\n";
+			$out .= "\t\t\t'fields' => '',\n";
+			$out .= "\t\t\t'order' => ''\n";
+			$out .= "\t\t)";
+			if ($i + 1 < count($fld)) {
+				$out .= ",";
+			}
+			*/
+			break;
+			//Attachments
+			case -4:
+			$associations['belongsTo'][] = array('alias' =>ucfirst($field['Fld']['name']), 'className'=>'FileManager.Attachment', 'foreignKey'=>$field['Fld']['name']);
+			/*
+			$out = "\n\t\t'".ucfirst($field['Fld']['name'])."' => array(\n";
+			$out .= "\t\t\t'className' => 'FileManager.Attachment',\n";
+			$out .= "\t\t\t'foreignKey' => '{$field['Fld']['name']}',\n";
+			$out .= "\t\t\t'conditions' => '',\n";
+			$out .= "\t\t\t'fields' => '',\n";
+			$out .= "\t\t\t'order' => ''\n";
+			$out .= "\t\t)";
+			if ($i + 1 < count($fld)) {
+				$out .= ",";
+			}
+			*/
+			break;
+			default:
+			$associations['belongsTo'][] = array('alias' =>ucfirst($field['Fld']['name']), 'className'=>Inflector::classify($pobjs[$field['Fld']['objectlink']]), 'foreignKey'=>$field['Fld']['name']);
+			/*	
+			$out = "\n\t\t'".ucfirst($field['Fld']['name'])."' => array(\n";
+			$out .= "\t\t\t'className' => '".Inflector::classify($pobjs[$field['Fld']['objectlink']])."',\n";
+			$out .= "\t\t\t'foreignKey' => '{$field['Fld']['name']}',\n";
+			$out .= "\t\t\t'conditions' => '',\n";
+			$out .= "\t\t\t'fields' => '',\n";
+			$out .= "\t\t\t'order' => ''\n";
+			$out .= "\t\t)";
+			if ($i + 1 < count($fld)) {
+				$out .= ",";
+			}
+			*/
+			break;
+		}
+		$i++;
+	}
+}
+$out1 = ($out!=''?$out:'');
+echo "*/";
 foreach (array('hasOne', 'belongsTo') as $assocType):
 	if (!empty($associations[$assocType])):
 		$typeCount = count($associations[$assocType]);
 		echo "\n/**\n * $assocType associations\n *\n * @var array\n */";
 		echo "\n\tpublic \$$assocType = array(";
 		foreach ($associations[$assocType] as $i => $relation):
-			if($relation['className'] == 'Attachment'){
+			switch($relation['className']){
+				case 'Attachment':
+					$out = "\n\t\t'{$relation['alias']}' => array(\n";
+					$out .= "\t\t\t'className' => 'FileManager.{$relation['className']}',\n";
+					$out .= "\t\t\t'foreignKey' => '{$relation['foreignKey']}',\n";
+					$out .= "\t\t\t'conditions' => '',\n";
+					$out .= "\t\t\t'fields' => '',\n";
+					$out .= "\t\t\t'order' => ''\n";
+					$out .= "\t\t)";
+					if ($i + 1 < $typeCount) {
+						$out .= ",";
+					}
+				break;
 				
-				$out = "\n\t\t'{$relation['alias']}' => array(\n";
-				$out .= "\t\t\t'className' => 'FileManager.{$relation['className']}',\n";
-				$out .= "\t\t\t'foreignKey' => '{$relation['foreignKey']}',\n";
-				$out .= "\t\t\t'conditions' => '',\n";
-				$out .= "\t\t\t'fields' => '',\n";
-				$out .= "\t\t\t'order' => ''\n";
-				$out .= "\t\t)";
-				if ($i + 1 < $typeCount) {
-					$out .= ",";
-				}
+				default:
+					$out = "\n\t\t'{$relation['alias']}' => array(\n";
+					$out .= "\t\t\t'className' => '{$relation['className']}',\n";
+					$out .= "\t\t\t'foreignKey' => '{$relation['foreignKey']}',\n";
+					$out .= "\t\t\t'conditions' => '',\n";
+					$out .= "\t\t\t'fields' => '',\n";
+					$out .= "\t\t\t'order' => ''\n";
+					$out .= "\t\t)";
+					if ($i + 1 < $typeCount) {
+						$out .= ",";
+					}
 				
-			}else{
-			
-				$out = "\n\t\t'{$relation['alias']}' => array(\n";
-				$out .= "\t\t\t'className' => '{$relation['className']}',\n";
-				$out .= "\t\t\t'foreignKey' => '{$relation['foreignKey']}',\n";
-				$out .= "\t\t\t'conditions' => '',\n";
-				$out .= "\t\t\t'fields' => '',\n";
-				$out .= "\t\t\t'order' => ''\n";
-				$out .= "\t\t)";
-				if ($i + 1 < $typeCount) {
-					$out .= ",";
-				}
+				break;
 			}
 			echo $out;
 		endforeach;
+		
+		echo $out1;
+		
 		echo "\n\t);\n";
 	endif;
 endforeach;

@@ -44,9 +44,15 @@ class ExampleActivation {
 		App::uses('AppShell', 'Console/Command');
 		App::uses('Model', 'Model');
 		
+		$oldprefix = Configure::read('Routing.prefixes');
+		Configure::write('Routing.prefixes', array('admin'));
+		
 		$thisshell = new Shell();
 		$thisshell->initialize();
+		
 		insert_shell_here
+		
+		Configure::write('Routing.prefixes', $oldprefix);
 		
 		App::uses('CroogoPlugin', 'Extensions.Lib');
 		$CroogoPlugin = new CroogoPlugin();

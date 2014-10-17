@@ -530,6 +530,53 @@ class ProjectsController extends ProjectAppController {
 				$flddetail = $this->Project->Pobject->Fld->find('first', array('conditions'=>array('Fld.id'=>$fld['id'])));
 				//debugger::dump($flddetail['Ftype']['name']);
 				if($fld['name'] != 'id'){
+					
+			
+					//not a linked field, process as normal.
+					if($fld['objectlink'] == NULL || $fld['objectlink'] == 0 || $fld['objectlink'] == ''){
+					//create sql string for tables
+						switch($fld['ftype_id']){
+							//for Date Types (no limit)
+							case 4:
+								$sqlstring .= $fld['name'].' '.$flddetail['Ftype']['sqltype'].', ';
+								$schemastring .= "'".$fld['name']."' => array('type'=>'".$flddetail['Ftype']['name']."', 'null' => false, 'default' => NULL),";
+								$string .= "'".$fld['name']."' => array('type'=>'".$flddetail['Ftype']['name']."', 'null' => false, 'default' => NULL),";
+							
+							break;
+							
+							//for map lng lats
+							case 7:
+								//lat
+								$sqlstring .= $fld['name'].'_lat decimal (9,6),';
+								$schemastring .= "'".$fld['name']."_lat' => array('type'=>'float', 'null' => false, 'default' => NULL),";
+								$string .= "'".$fld['name']."_lat' => array('type'=>'float', 'null' => false, 'default' => NULL),";
+								
+								//lng
+								$sqlstring .= $fld['name'].'_lng decimal (9,6),';
+								$schemastring .= "'".$fld['name']."_lng' => array('type'=>'float', 'null' => false, 'default' => NULL),";
+								$string .= "'".$fld['name']."_lng' => array('type'=>'float', 'null' => false, 'default' => NULL),";
+							
+							break
+							;
+							//for Non-date Types
+							default:
+								$sqlstring .= $fld['name'].' '.$flddetail['Ftype']['sqltype'].' ('.$fld['length'].'),';
+								$schemastring .= "'".$fld['name']."' => array('type'=>'".$flddetail['Ftype']['name']."', 'null' => false, 'default' => NULL, 'length' => ".$fld['length']."),";
+								$string .= "'".$fld['name']."' => array('type'=>'".$flddetail['Ftype']['name']."', 'null' => false, 'default' => NULL, 'length' => ".$fld['length']."),";
+							
+							break;
+						}
+					}else{
+						//is a linked field...
+						//TODO: get the type of feild from the 'ID' of the linked object
+						$sqlstring .= $fld['name'].' '.$flddetail['Ftype']['sqltype'].' ('.$fld['length'].'),';
+						$schemastring .= "'".$fld['name']."' => array('type'=>'".$flddetail['Ftype']['name']."', 'null' => false, 'default' => NULL, 'length' => ".$fld['length']."),";
+						$string .= "'".$fld['name']."' => array('type'=>'".$flddetail['Ftype']['name']."', 'null' => false, 'default' => NULL, 'length' => ".$fld['length']."),";
+					
+					}
+				
+					//OLD CODE 10-17-14
+					/*
 					if($fld['ftype_id'] != 4){
 						$sqlstring .= $fld['name'].' '.$flddetail['Ftype']['sqltype'].' ('.$fld['length'].'),';
 						$schemastring .= "'".$fld['name']."' => array('type'=>'".$flddetail['Ftype']['name']."', 'null' => false, 'default' => NULL, 'length' => ".$fld['length']."),";
@@ -539,6 +586,7 @@ class ProjectsController extends ProjectAppController {
 						$schemastring .= "'".$fld['name']."' => array('type'=>'".$flddetail['Ftype']['name']."', 'null' => false, 'default' => NULL),";
 						$string .= "'".$fld['name']."' => array('type'=>'".$flddetail['Ftype']['name']."', 'null' => false, 'default' => NULL),";
 					}
+					*/
 				}
 			}
 			$sqlstring = rtrim($sqlstring, ",");
