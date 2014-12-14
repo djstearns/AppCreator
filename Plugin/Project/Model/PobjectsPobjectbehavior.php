@@ -6,7 +6,7 @@ App::uses('ProjectAppModel', 'Project.Model');
  * @property Pobject $Pobject
  * @property Pobjectbehavior $Pobjectbehavior
  */
-class Pobject extends ProjectAppModel {
+class PobjectsPobjectbehavior extends ProjectAppModel {
 
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed

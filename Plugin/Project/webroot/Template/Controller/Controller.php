@@ -108,10 +108,11 @@ class PLUGINNAMEController extends PLUGINNAMEAppController {
     
 		
 		$assocaitions = array();
-		
+		$alloystrarr = array();
 		//build alloy.js!
-		$alloystr = '
-		Alloy.Globals.RELATIONSHIP = {';
+		$alloystr = 
+		//'Alloy.Globals.RELATIONSHIP = {';
+		'Alloy.Globals.RELATIONSHIP = ';
 		
 		$alloystr2 = '
 		if(Alloy.Globals.LocalDB == true){';
@@ -128,7 +129,7 @@ class PLUGINNAMEController extends PLUGINNAMEAppController {
 				 
 				//2. build mobile model file
 				
-				$alloystr .= $this->bakeMobileModel($mymodel);
+				$alloystrarr[] = $this->bakeMobileModel($mymodel);
 				
 				//3. build mobile controller files:
 				$this->bakeMobileController($mymodel);
@@ -138,10 +139,9 @@ class PLUGINNAMEController extends PLUGINNAMEAppController {
 			}
 			
 		}
-		
-		$alloystr = substr($alloystr, 0, -1);
-		$alloystr .= '};
-		';
+		$alloystr .= json_encode($alloystrarr);
+		//$alloystr = substr($alloystr, 0, -1);
+		//$alloystr .= '};';
 		
 		//echo $alloystr;
 		//debugger::dump($alloystr);
@@ -595,14 +595,33 @@ class PLUGINNAMEController extends PLUGINNAMEAppController {
 			'useTable' => null, 'useDbConfig' => 'default', 'displayField' => null);
 		$data = array_merge($defaults, $data);
 		
+		$strarr = array(strtolower($this->_pluralName($name))=>array(
+										'Modelname'=>ucfirst($this->_pluralName($name)),
+										'modelname'=>$this->_pluralName($name),
+										'tblname'=>$this->_pluralName($name),
+										 'sModelname'=>$name)
+		);
+		/*
+		
 		$str = '"'.strtolower($this->_pluralName($name)).'":{
 					"Modelname":"'.ucfirst($this->_pluralName($name)).'",
 					"modelname":"'.$this->_pluralName($name).'",
 					"singlename":"'.$this->_singularName($this->_modelName($name)).'",
 					"tblname":"'.$this->_pluralName($name).'",
 					"sModelname":"'.$name.'",';
+		*/
 		if(!empty($data['associations']['belongsTo'])){
 			foreach($data['associations']['belongsTo'] as $num => $relname){
+				$strarr[] = array($this->_pluralName($relname['alias'])=>array(
+												'relation'=>'BT',
+												'tblname'=>$this->_pluralName($relname['alias']),
+												'Modelname'=>ucfirst($this->_pluralName($relname['alias'])),
+												'modelname'=>$this->_pluralName($relname['alias']),
+												'sModelname'=>$relname['alias']
+													)
+				
+				);
+				/*
 				$str .= '"'.$this->_pluralName($relname['alias']).'":{
 							"relation":"BT",
 							"tblname":"'.$this->_pluralName($relname['alias']).'",
@@ -610,13 +629,24 @@ class PLUGINNAMEController extends PLUGINNAMEAppController {
 							"modelname":"'.$this->_pluralName($relname['alias']).'",
 							"sModelname":"'.$relname['alias'].'"
 						},';
+						*/
 			}
 			//delete last comma
-			$str = substr($str, 0, -1);
+			//$str = substr($str, 0, -1);
 		}
 		
 		if(!empty($data['associations']['hasMany'])){
 			foreach($data['associations']['hasMany'] as $num => $relname){
+				$strarr[] = array($this->_pluralName($relname['alias'])=>array(
+												'relation'=>'HM',
+												'tblname'=>$this->_pluralName($relname['alias']),
+												'Modelname'=>ucfirst($this->_pluralName($relname['alias'])),
+												'modelname'=>$this->_pluralName($relname['alias']),
+												'sModelname'=>$relname['alias']
+													)
+				
+				);
+				/*
 				$str .= '"'.$this->_pluralName($relname['alias']).'":{
 							"relation":"HM",
 							"tblname":"'.$this->_pluralName($relname['alias']).'",
@@ -624,27 +654,40 @@ class PLUGINNAMEController extends PLUGINNAMEAppController {
 							"modelname":"'.$this->_pluralName($relname['alias']).'",
 							"sModelname":"'.$relname['alias'].'"
 						},';
+						*/
 			}
 			//delete last comma
-			$str = substr($str, 0, -1);
+			//$str = substr($str, 0, -1);
 		}
 		
 		if(!empty($data['associations']['hasAndBelongsToMany'])){
 			
-			$str .= '"related":{';
+			//$str .= '"related":{';
+			$strarr[] = array('related'=>array());
 			
 			foreach($data['associations']['hasAndBelongsToMany'] as $num => $relname){
+				
+				$strarr['related'][] = array(strtolower($this->_pluralName($relname['alias']))=>array(
+												
+												'manytomanytblname'=>$relname['joinTable'],
+												'manytomanyModelname'=>$this->_controllerName($relname['joinTable']),
+												'manytomanymodelname'=>strtolower($this->_controllerName($relname['joinTable']))
+													)
+				
+				);
+				/*
 				$str .= '"'.strtolower($this->_pluralName($relname['alias'])).'":{
 							"manytomanytblname":"'.$relname['joinTable'].'",
 							"manytomanyModelname":"'.$this->_controllerName($relname['joinTable']).'",
 							"manytomanymodelname":"'.strtolower($this->_controllerName($relname['joinTable'])).'"
 						},';
+						*/
 			}
 			//delete last comma
-			$str = substr($str, 0, -1);
-			$str .= '}';
+			//$str = substr($str, 0, -1);
+			//$str .= '}';
 		}			
-		$str .= '	},';
+		//$str .= '	},';
 		
 		
 		$fldstr = '"id":"INTEGER PRIMARY KEY",';
@@ -699,7 +742,7 @@ class PLUGINNAMEController extends PLUGINNAMEAppController {
 		//$this->out("\nBaking model class for $name...");
 		$this->createFile($filename, $path, $out);
 		ClassRegistry::flush();
-		return $str;
+		return $strarr;
    }
    
    function bakeMobileController($name, $data = array()){
@@ -931,7 +974,7 @@ class PLUGINNAMEController extends PLUGINNAMEAppController {
 		}
 		
 		$cfldstr = substr($fldstr, 0, -1);
-		$cfldstr2 = substr($fldstr2, 0, -1);
+		//$cfldstr2 = substr($fldstr2, 0, -1);
 		
 		$detailStr =
 		"///**************
