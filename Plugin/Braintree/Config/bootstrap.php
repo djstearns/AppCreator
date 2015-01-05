@@ -180,7 +180,7 @@ CroogoNav::add(
 				'admin' => true,
 				'plugin' => 'Braintree',
 				'controller' => 'Braintree',
-				'action' => 'braintree_address',
+				'action' => 'braintree_addresses',
 			),
 			'children'=> array(
 				'List' => array(
@@ -188,7 +188,7 @@ CroogoNav::add(
 					'url' => array(
 						'admin' => true,
 						'plugin' => 'braintree',
-						'controller' => 'braintree_address',
+						'controller' => 'braintree_addresses',
 						'action' => 'index',
 					),
 				),
@@ -197,7 +197,7 @@ CroogoNav::add(
 					'url' => array(
 						'admin' => true,
 						'plugin' => 'braintree',
-						'controller' => 'braintree_addr	ess',
+						'controller' => 'braintree_addresses',
 						'action' => 'add',
 					),
 				),
