@@ -23,7 +23,8 @@
  * @package    braintree
  * @subpackage braintree.models
  */
-class BraintreeCreditCardRelation extends BraintreeAppModel {
+App::uses('BraintreeLocalAppModel', 'Braintree.Model'); 
+class BraintreeCreditCardRelation extends BraintreeLocalAppModel {
 
 /**
  * Name of model

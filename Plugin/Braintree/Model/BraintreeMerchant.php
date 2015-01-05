@@ -23,7 +23,8 @@
  * @package    braintree
  * @subpackage braintree.models
  */
-class BraintreeMerchant extends BraintreeAppModel {
+App::uses('BraintreeLocalAppModel', 'Braintree.Model');
+class BraintreeMerchant extends BraintreeLocalAppModel {
 
 /**
  * Name of model

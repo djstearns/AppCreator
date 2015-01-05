@@ -26,6 +26,12 @@ class BraintreeEventHandler extends Object implements CakeEventListener {
 				'callable' => 'onAdminLoginSuccessful',
 			),
 			*/
+			'Controller.Users.adminUserEdit' => array(
+				'callable' => 'syncUserInfo',
+			),
+			'Controller.Users.adminUserAdd' => array(
+				'callable' => 'syncUserInfo',
+			),
 			'Helper.Layout.beforeFilter' => array(
 				'callable' => 'onLayoutBeforeFilter',
 			),
@@ -34,7 +40,74 @@ class BraintreeEventHandler extends Object implements CakeEventListener {
 			),
 		);
 	}
-
+	
+	public function adminUserAdd($event){
+		$Controller = $event->subject();
+		//$message = sprintf('Welcome %s.  Have a nice day', $Controller->Auth->user('name'));
+		//$Controller->Session->setFlash($message);
+		if(!empty($this->request->data)){
+			$data = array('BraintreeCreditCard'=>array(
+					
+					'braintree_customer_id'=>$braintree_customer_id,
+					'braintree_merchant_id'=>'zt3zqwt76hwjshff',
+					'unique_card_identifier'=>$this->request->data['payment_method_nonce'],
+					
+				));
+			
+			$success = ClassRegistry::init('Braintree.BraintreeCreditCard')->save($data);
+			
+			if($success==true){
+				$this->Session->setFlash(__d('croogo', 'Credit card added'), 'default', array('class' => 'success'));
+				
+			}else{
+				$this->Session->setFlash(__d('croogo', 'Credit card could not be added.'), 'default', array('class' => 'error'));
+				//$this->redirect(array('action' => 'ccform'));
+			}
+		}
+		
+		/*
+		$Controller->redirect(array(
+			'admin' => true,
+			'plugin' => 'project',
+			'controller' => 'project',
+			'action' => 'index',
+		));
+		*/
+	}
+	
+	public function adminUserEdit($event){
+		$Controller = $event->subject();
+		//$message = sprintf('Welcome %s.  Have a nice day', $Controller->Auth->user('name'));
+		//$Controller->Session->setFlash($message);
+		if(!empty($this->request->data)){
+			$data = array('BraintreeCreditCard'=>array(
+					
+					'braintree_customer_id'=>$braintree_customer_id,
+					'braintree_merchant_id'=>'zt3zqwt76hwjshff',
+					'unique_card_identifier'=>$this->request->data['payment_method_nonce'],
+					
+				));
+			
+			$success = ClassRegistry::init('Braintree.BraintreeCreditCard')->save($data);
+			
+			if($success==true){
+				$this->Session->setFlash(__d('croogo', 'Credit card added'), 'default', array('class' => 'success'));
+				
+			}else{
+				$this->Session->setFlash(__d('croogo', 'Credit card could not be added.'), 'default', array('class' => 'error'));
+				//$this->redirect(array('action' => 'ccform'));
+			}
+		}
+		
+		/*
+		$Controller->redirect(array(
+			'admin' => true,
+			'plugin' => 'project',
+			'controller' => 'project',
+			'action' => 'index',
+		));
+		*/
+	}
 
 /**
  * onLayoutBeforeFilter
@@ -60,6 +133,28 @@ class BraintreeEventHandler extends Object implements CakeEventListener {
 	public function onLayoutAfterFilter($event) {
 		if (strpos($event->data['content'], 'This is') !== false) {
 			$event->data['content'] .= '<blockquote>This is added by FacebookEventHandler::onLayoutAfterFilter()</blockquote>';
+		}
+	}
+	
+	public function syncUserInfo(){
+		if(!empty($this->request->data)){
+			$data = array('BraintreeCreditCard'=>array(
+					
+					'braintree_customer_id'=>$braintree_customer_id,
+					'braintree_merchant_id'=>'zt3zqwt76hwjshff',
+					'unique_card_identifier'=>$this->request->data['payment_method_nonce'],
+					
+				));
+			
+			$success = ClassRegistry::init('Braintree.BraintreeCreditCard')->save($data);
+			
+			if($success==true){
+				$this->Session->setFlash(__d('croogo', 'Credit card added'), 'default', array('class' => 'success'));
+				
+			}else{
+				$this->Session->setFlash(__d('croogo', 'Credit card could not be added.'), 'default', array('class' => 'error'));
+				$this->redirect(array('action' => 'ccform'));
+			}
 		}
 	}
 

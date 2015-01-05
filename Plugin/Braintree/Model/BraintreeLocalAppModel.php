@@ -23,8 +23,9 @@
  * @package    braintree
  * @subpackage braintree.models
  */
+App::uses('BraintreeAppModel', 'Braintree.Model');
 class BraintreeLocalAppModel extends BraintreeAppModel {
-	
+	//public $useTable = false;
 /**
  * Should the primary key be automatically generated?
  *

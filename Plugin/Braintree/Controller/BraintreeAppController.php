@@ -25,6 +25,7 @@ App::uses('AppController', 'Controller');
  * @subpackage braintree.controllers
  */
 //App::uses('Vendor', 'Braintree.Braintree');
+
 App::import(
     'Vendor',
     'Braintree.braintree',
@@ -42,9 +43,11 @@ class BraintreeAppController extends AppController {
 		$braintree_configs = ClassRegistry::init('Braintree.BraintreeMerchant')->find('first', array(  
 			 'conditions' => array(  
 				  'BraintreeMerchant.id' => $merchant_id  
+				  //'braintree_merchants.active' => 1
 			 ),  
-			 'contain' => false  
+			 
 		));
+		
 		
 		BraintreeConfig::set(array(  
 			'merchantId' => $merchant_id,  
@@ -52,7 +55,25 @@ class BraintreeAppController extends AppController {
 			'privateKey' => $braintree_configs['BraintreeMerchant']['braintree_private_key'],
 			'environment' => 'sandbox' //or 'production'
 		)); 
+		
+		$user = $this->Auth->user();
+		$braintree_customer_id = ClassRegistry::init('Braintree.BraintreeCustomer')->getOrCreateCustomerId(
+				 'User', // A model in your app that you want to associate the Braintree customer with
+				 1, // A foreign_id in your app that you want to associate the Braintree customer with
+				 array(
+					 'braintree_merchant_id'=>'zt3zqwt76hwjshff', 
+					 'first_name' => $user['firstName'],
+					 'last_name' =>  $user['lastName'],//$app_customer['last_name'],
+					// 'company' =>  $user['company'],//$app_customer['company'],
+					 'email' => $user['email'], //$app_customer['email'],
+					 'phone' => $user['phone'], //$app_customer['phone'],
+				 )
+			 );
+		
 
+		
+		 $this->set('user', $user);
+		 $this->set('braintree_customer_id', $braintree_customer_id);
 		
 	}
 }

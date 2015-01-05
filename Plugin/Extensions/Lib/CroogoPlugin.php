@@ -324,9 +324,11 @@ class CroogoPlugin extends Object {
 	public function needMigration($plugin, $isActive) {
 		$needMigration = false;
 		if ($isActive) {
+			
 			$mapping = $this->_getMigrationVersion()->getMapping($plugin);
 			$currentVersion = $this->_getMigrationVersion()->getVersion($plugin);
 			if ($mapping) {
+					
 				$lastVersion = max(array_keys($mapping));
 				$needMigration = ($lastVersion - $currentVersion != 0);
 			}

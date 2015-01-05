@@ -1,4 +1,5 @@
 <?php
+
 if (Configure::read('debug') > 0) {
 	Configure::write('Braintree.environment', 'sandbox');
 } else {
@@ -8,6 +9,7 @@ if (Configure::read('debug') > 0) {
 Configure::write('Braintree.merchantId', true); // stub
 Configure::write('Braintree.publicKey', true); // stub
 Configure::write('Braintree.privateKey', true); // stub
+
 
 /**
  * Routes
@@ -40,62 +42,170 @@ Croogo::hookRoutes('Braintree');
 /**
  * Admin menu (navigation) OLD DEFAULT STRING WILL BE APPENDED BELOW:
  */
- /*
-CroogoNav::add('extensions.children.Braintree', array(
+ 
+CroogoNav::add(
+	'Braintree', array(
 	'title' => 'Braintree',
 	'url' => '#',
 	'children' => array(
-		'Braintree1' => array(
-			'title' => 'Braintree 1',
+		'Settings' => array(
+			'title' => 'Settings',
 			'url' => array(
 				'admin' => true,
 				'plugin' => 'Braintree',
 				'controller' => 'Braintree',
 				'action' => 'index',
 			),
-		),
-		'Braintree2' => array(
-			'title' => 'Braintree 2 with a title that won\'t fit in the sidebar',
-			'url' => '#',
-			'children' => array(
-				'Braintree-2-1' => array(
-					'title' => 'Braintree 2-1',
-					'url' => '#',
-					'children' => array(
-						'Braintree-2-1-1' => array(
-							'title' => 'Braintree 2-1-1',
-							'url' => '#',
-							'children' => array(
-								'Braintree-2-1-1-1' => array(
-									'title' => 'Braintree 2-1-1-1',
-								),
+				'children'=>array(
+					'Settings' => array(
+					'title' => 'Settings',
+					'url' => array(
+						'admin' => true,
+						'plugin' => 'braintree',
+						'controller' => 'braintree_settings',
+						'action' => 'index',
+					)),
+					'Merchant' => array(
+					'title' => 'Merchant',
+					'url' => array(
+						'admin' => true,
+						'plugin' => 'Braintree',
+						'controller' => 'Merchant',
+						'action' => 'index',
+					),
+					'children'=> array(
+						'List' => array(
+							'title' => 'List',
+							'url' => array(
+								'admin' => true,
+								'plugin' => 'braintree',
+								'controller' => 'braintree_merchants',
+								'action' => 'index',
 							),
 						),
+						'Add' => array(
+							'title' => 'Add',
+							'url' => array(
+								'admin' => true,
+								'plugin' => 'braintree',
+								'controller' => 'braintree_merchants',
+								'action' => 'add',
+							),
+						),
+					)
+				),
+			)
+			
+		),
+		'Customers' => array(
+			'title' => 'Customers',
+			'url' => '#',
+			'children'=> array(
+				'List' => array(
+					'title' => 'List',
+					'url' => array(
+						'admin' => true,
+						'plugin' => 'braintree',
+						'controller' => 'braintree_customers',
+						'action' => 'index',
 					),
 				),
-			),
+				'Add' => array(
+					'title' => 'Add',
+					'url' => array(
+						'admin' => true,
+						'plugin' => 'braintree',
+						'controller' => 'braintree_customers',
+						'action' => 'add',
+					),
+				),
+			)
 		),
-		'Braintree3' => array(
-			'title' => 'Chooser Braintree',
+		'CreditCards' => array(
+			'title' => 'Credit Cards',
+			'url' => array(
+				'admin' => true,
+				'plugin' => 'Braintree',
+				'controller' => 'braintree_credit_cards',
+				'action' => 'index',
+			),
+			'children'=> array(
+				'List' => array(
+					'title' => 'List',
+					'url' => array(
+						'admin' => true,
+						'plugin' => 'braintree',
+						'controller' => 'braintree_credit_cards',
+						'action' => 'index',
+					),
+				),
+				'Add' => array(
+					'title' => 'Add',
+					'url' => array(
+						'admin' => true,
+						'plugin' => 'braintree',
+						'controller' => 'braintree_credit_cards',
+						'action' => 'add',
+					),
+				),
+			)
+		),
+		'Transactions' => array(
+			'title' => 'Transactions',
+			'url' => '#',
+			'children'=> array(
+				'List' => array(
+					'title' => 'List',
+					'url' => array(
+						'admin' => true,
+						'plugin' => 'braintree',
+						'controller' => 'braintree_transactions',
+						'action' => 'index',
+					),
+				),
+				'Add' => array(
+					'title' => 'Add',
+					'url' => array(
+						'admin' => true,
+						'plugin' => 'braintree',
+						'controller' => 'braintree_transactions',
+						'action' => 'admin)add',
+					),
+				),
+			)
+		),
+		'Addresses' => array(
+			'title' => 'Addresses',
 			'url' => array(
 				'admin' => true,
 				'plugin' => 'Braintree',
 				'controller' => 'Braintree',
-				'action' => 'chooser',
+				'action' => 'braintree_address',
 			),
-		),
-		'Braintree4' => array(
-			'title' => 'RTE Braintree',
-			'url' => array(
-				'admin' => true,
-				'plugin' => 'Braintree',
-				'controller' => 'Braintree',
-				'action' => 'rte_Braintree',
-			),
+			'children'=> array(
+				'List' => array(
+					'title' => 'List',
+					'url' => array(
+						'admin' => true,
+						'plugin' => 'braintree',
+						'controller' => 'braintree_address',
+						'action' => 'index',
+					),
+				),
+				'Add' => array(
+					'title' => 'Add',
+					'url' => array(
+						'admin' => true,
+						'plugin' => 'braintree',
+						'controller' => 'braintree_addr	ess',
+						'action' => 'add',
+					),
+				),
+			)
 		),
 	),
 ));
-*/
+
 $Localization = new L10n();
 
 //This will need to be custom also set in the field type
@@ -172,8 +282,8 @@ Croogo::hookAdminRowAction('Nodes/admin_index', 'Icon Only', array(
  *
  * Useful for adding form extra form fields to OTHER MODELS if necessary.
  */
- 
- 
+
+
 Croogo::hookAdminTab('Users/admin_add', 'Payment Info', 'Braintree.admin_tab_user');
 Croogo::hookAdminTab('Users/admin_edit', 'Payment Info', 'Braintree.admin_tab_user');
 

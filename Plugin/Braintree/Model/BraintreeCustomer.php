@@ -153,6 +153,12 @@ class BraintreeCustomer extends BraintreeLocalAppModel {
  * @param	array	$data		Data to be saved with the Braintree Customer. See BraintreeRemoteCustomer::$_schema for possible keys
  * @return	string
  */
+ 	public function getUser(){
+		return CakeSession::read("Auth.User");
+		//Configure::write('Braintree.user', $this->Auth->User()); 
+		//return $this->Auth->user();
+	}
+	
 	public function getOrCreateCustomerId ($model, $foreign_id, $data=array()) {
 		
 		$braintree_customer_id = false;

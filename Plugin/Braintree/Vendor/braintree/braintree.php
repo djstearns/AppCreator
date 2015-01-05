@@ -3,7 +3,7 @@ require_once('api' . DS . 'lib' . DS . 'Braintree.php');
 
 class BraintreeConfig {
 	
-	public function set ($configs=array()) {
+	public static function set ($configs=array()) {
 		
 		
 		extract($configs);

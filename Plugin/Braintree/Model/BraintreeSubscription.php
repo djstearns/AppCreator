@@ -23,7 +23,7 @@
  * @package    braintree
  * @subpackage braintree.models
  */
-App::uses('Braintree.BraintreeLocalAppModel');
+App::uses('BraintreeLocalAppModel', 'Braintree.Model');
 class BraintreeSubscription extends BraintreeLocalAppModel {
 
 /**

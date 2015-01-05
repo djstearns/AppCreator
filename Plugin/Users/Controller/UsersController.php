@@ -70,6 +70,8 @@ class UsersController extends UsersAppController {
 		return parent::implementedEvents() + array(
 			'Controller.Users.beforeAdminLogin' => 'onBeforeAdminLogin',
 			'Controller.Users.adminLoginFailure' => 'onAdminLoginFailure',
+			'Controller.Users.admin_edit' => 'adminUserEdit',
+			'Controller.Users.admin_add' => 'adminUserAdd'
 		);
 	}
 

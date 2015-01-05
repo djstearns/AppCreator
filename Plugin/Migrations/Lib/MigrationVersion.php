@@ -140,7 +140,7 @@ class MigrationVersion {
 		$mapping = $this->getMapping($type);
 		if ($mapping !== false) {
 			krsort($mapping);
-
+			
 			foreach ($mapping as $version => $info) {
 				if ($info['migrated'] !== null) {
 					return $version;

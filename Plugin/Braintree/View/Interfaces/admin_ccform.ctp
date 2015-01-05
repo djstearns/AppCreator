@@ -25,7 +25,6 @@ echo $this->Html->script(array(
 ?>
 <?php 
 
-
 echo $this->Form->create(null, array('url' => array('plugin'=>'braintree', 'controller' => 'interfaces', 'action' => 'ccform')));
 echo $this->Form->input('BraintreeCustomer.firstName', array('value'=>$user['firstName']));
 echo $this->Form->input('BraintreeCustomer.lastName', array('value'=>$user['lastName']));

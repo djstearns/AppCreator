@@ -1,35 +1,93 @@
+<?php
+/**
+ * CVV Helper View File
+ * 
+ * Copyright (c) 2010 Anthony Putignano
+ *
+ * Distributed under the terms of the MIT License.
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * PHP version 5.2
+ * CakePHP version 1.3
+ *
+ * @package    braintree
+ * @subpackage braintree.views
+ * @copyright  2010 Anthony Putignano <anthonyp@xonatek.com>
+ * @license    http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @link       http://github.com/anthonyp/braintree
+ */
+
+?>
 <?php 
+
 echo $this->Html->script(array(
 			'https://js.braintreegateway.com/v2/braintree.js'
 		));
-
 ?>
-
 <?php 
-echo $this->Form->create(null); 
-echo $this->Form->input('firstName');
-echo $this->Form->input('lastName');
-echo $this->Form->input('phone');
+	
+ App::import(
+    'Vendor',
+    'Braintree.braintree',
+    array('file' => 'braintree' . DS . 'braintree.php')
+);
+
+		$merchant_id = 'zt3zqwt76hwjshff'; // the merchant ID you want to use  
+		$braintree_configs = ClassRegistry::init('Braintree.BraintreeMerchant')->find('first', array(  
+			 'conditions' => array(  
+				  'BraintreeMerchant.id' => $merchant_id  
+			 ),  
+			 'contain' => false  
+		));
+BraintreeConfig::set(array(  
+			'merchantId' => $merchant_id,  
+			'publicKey' => $braintree_configs['BraintreeMerchant']['braintree_public_key'],  
+			'privateKey' => $braintree_configs['BraintreeMerchant']['braintree_private_key'],
+			'environment' => 'sandbox' //or 'production'
+		)); 	
+	
+$user = ClassRegistry::init('Braintree.BraintreeCustomer')->getUser();
+
+
+$braintree_customer_id = ClassRegistry::init('Braintree.BraintreeCustomer')->getOrCreateCustomerId(
+		 'User', // A model in your app that you want to associate the Braintree customer with
+		 1, // A foreign_id in your app that you want to associate the Braintree customer with
+		 array(
+			 'braintree_merchant_id'=>'zt3zqwt76hwjshff', 
+			 'first_name' => $user['firstName'],
+			 'last_name' =>  $user['lastName'],//$app_customer['last_name'],
+			// 'company' =>  $user['company'],//$app_customer['company'],
+			 'email' => $user['email'], //$app_customer['email'],
+			 'phone' => $user['phone'], //$app_customer['phone'],
+		 )
+	 );
+	 
+$clientToken = Braintree_ClientToken::generate(array(
+			"customerId" => $braintree_customer_id
+		));
+		
+
+/*
+$clientToken = Braintree_ClientToken::generate(array(
+			"customerId" => $braintree_customer_id
+		));
+*/		
+$user = Configure::read('Braintree.user'); 
+echo $this->Form->create(null, array('url' => array('plugin'=>'braintree', 'controller' => 'interfaces', 'action' => 'ccform')));
+echo $this->Form->input('BraintreeCustomer.firstName', array('value'=>$user['firstName']));
+echo $this->Form->input('BraintreeCustomer.lastName', array('value'=>$user['lastName']));
+echo $this->Form->input('BraintreeCustomer.phone', array('value'=>$user['phone']));
+echo $this->Form->input('BraintreeCustomer.id', array('value'=>$braintree_customer_id));
 ?>
  <div id="dropin"></div>
 <?php //echo $this->Form->submit(); ?>
-<?php //echo $this->Form->end(); ?>
- 
-<?php 
-/*
 
-braintree.setup("<?php //echo $clientToken; ?>", 'dropin', {
+
+
+<script type="text/javascript">
+
+braintree.setup("<?php echo $clientToken; ?>", 'dropin', {
   container: 'dropin'
 });
-*/
-$script = <<<EOF
-	
-braintree.setup("eyJ2ZXJzaW9uIjoxLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiI3ZTQ4NjE5ODMzY2VhMTEwOWFiMjkzNWE0YjcxMDhiNzQ4MzA0MTJlMzllMzIzZDQ1YmQyZTRhNDQ5MmZhZWUzfGNyZWF0ZWRfYXQ9MjAxNC0wOC0xNVQxMTozMTowNC43MTI1ODI4NzQrMDAwMFx1MDAyNm1lcmNoYW50X2lkPWRjcHNweTJicndkanIzcW5cdTAwMjZwdWJsaWNfa2V5PTl3d3J6cWszdnIzdDRuYzgiLCJjaGFsbGVuZ2VzIjpbImN2diJdLCJjbGllbnRBcGlVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvZGNwc3B5MmJyd2RqcjNxbi9jbGllbnRfYXBpIiwiYXNzZXRzVXJsIjoiaHR0cHM6Ly9hc3NldHMuYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhdXRoVXJsIjoiaHR0cHM6Ly9hdXRoLnZlbm1vLnNhbmRib3guYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJwYXltZW50QXBwU2NoZW1lcyI6W10sInRocmVlRFNlY3VyZUVuYWJsZWQiOmZhbHNlLCJwYXlwYWxFbmFibGVkIjp0cnVlLCJwYXlwYWwiOnsiZGlzcGxheU5hbWUiOiJBY21lIFdpZGdldHMsIEx0ZC4gKFNhbmRib3gpIiwiY2xpZW50SWQiOm51bGwsInByaXZhY3lVcmwiOiJodHRwOi8vZXhhbXBsZS5jb20vcHAiLCJ1c2VyQWdyZWVtZW50VXJsIjoiaHR0cDovL2V4YW1wbGUuY29tL3RvcyIsImJhc2VVcmwiOiJodHRwczovL2Fzc2V0cy5icmFpbnRyZWVnYXRld2F5LmNvbSIsImFzc2V0c1VybCI6Imh0dHBzOi8vY2hlY2tvdXQucGF5cGFsLmNvbSIsImRpcmVjdEJhc2VVcmwiOm51bGwsImFsbG93SHR0cCI6dHJ1ZSwiZW52aXJvbm1lbnROb05ldHdvcmsiOnRydWUsImVudmlyb25tZW50Ijoib2ZmbGluZSJ9LCJhbmFseXRpY3MiOnsidXJsIjoiaHR0cHM6Ly9hcGkuc2FuZGJveC5icmFpbnRyZWVnYXRld2F5LmNvbTo0NDMvbWVyY2hhbnRzL2RjcHNweTJicndkanIzcW4vY2xpZW50X2FwaS9hbmFseXRpY3MifX0=", 'dropin', {
-  container: 'dropin'
-});
-EOF;
 
-if ($this->request->params['action'] == 'admin_add' || $this->request->params['action']=='admin_edit'):
-	$this->Js->buffer($script);
-endif;
-?>
+</script>
